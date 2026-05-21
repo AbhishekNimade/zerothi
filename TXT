@@ -1,0 +1,115 @@
+
+5
+
+Automatic Zoom
+ZEROTHI 2026 Roadmap
+Objective : -
+1. Build a strong brand identity
+2. Showcase products effectively
+3. Enable online ordering
+4. Create customer trust
+5. Tell the Zerothi story and Nimad culture
+6. Build a scalable D2C brand for future growth
+Website Type :-
+1. E-commerce + Brand Story Website
+Features Required :-
+1. Responsive mobile design
+2. WhatsApp integration
+3. Social media integration
+4. Customer reviews
+5. Shopping cart
+Branding Guidelines :-
+Theme : Black with Light Golden texture
+Background : Black
+Color Palette : Golden Yellow Accent
+Font : Cizal or will looks on the based on your convenience
+Website Structure :-
+1. Home Page
+Hero Section : Large premium banner of ZEROTHI image or video “Future Perspective".
+Headline : "The Taste of Nimar"
+Subheadline : "Traditional purity from Nimad, empowering women and supporting
+farmers"
+Call-to-Action Buttons: Explore Our Story
+2. About Us Page
+Our Y-leaf Journey represents — from farm to your taste.
+Zerothi was born from its origin in Nimar, Madhya Pradesh. It was a simple idea to bring
+the real taste of Nimar to modern homes. We focus on purity, process, and consistency.
+Coming from Nimar, where food is still rooted in tradition. We saw an opportunity to bring
+that same real taste to a wider market.
+Include :
+● Brand journey
+● Vision
+● Mission
+● Founder section
+● BRAND JOURNEY - Zerothi is more than a food brand — it is a
+representation of Nimar taste, its farmers, its women-led craftsmanship,
+and a commitment to delivering real products made with honesty, tradition,
+and purpose.
+● VISION - Zerothi was founded with a vision to bring the taste of the Nimar
+region to modern consumers while creating meaningful impact for local
+communities connected to its roots.
+● MISSION - Nimad is known for its rich agricultural heritage, hardworking
+farmers, and traditional food culture. From banana farming to dairy-based
+products, the region carries a unique identity that is rarely represented in
+its purest form in the market. Zerothi was created to bridge that gap — by
+delivering authentic, unadulterated products that truly represent the soil,
+people, and traditions of Nimad.
+● FOUNDER SECTION -
+Meet the Founders
+Yash Patidar - Co-Founder
+With a background in B.Tech in Information Technology and 7+ years of
+corporate experience across multiple industries, Yash brings expertise in
+execution, operations, and strategic business management. Having
+worked in core management and leadership-driven roles, he has
+developed deep experience in handling operations, building structured
+workflows, managing teams, and driving execution-focused growth
+strategies.
+Mayank Chouhan - Co-Founder
+An MBA professional with a highly business-driven mindset, Mayank
+possesses a strong ability to identify market gaps, consumer demand, and
+scalable business opportunities. His strategic thinking and entrepreneurial
+vision play a key role in shaping Zerothi’s growth direction. With expertise
+in business development, market expansion. He focuses on transforming
+traditional regional products into strong modern-market brands.
+Abhishek Gowasami - Head – Agro Operations
+Experienced agro professional with strong expertise in crop selection,
+agricultural production planning, and ground-level execution with more
+than 10+ years.Skilled in optimizing farming processes to improve
+productivity, ensure quality output, and drive efficient field operations.
+Brings strong regional market knowledge and practical execution
+capabilities to support sustainable growth and operational excellence.
+3. Products Page :-
+Product Categories -
+1) Banana Chips —> Multiple Flavoured
+2) Ghee
+3) Oil
+4) Future Product Lines
+Each Product Should Include -
+1) Banana Chips:-
+● Product images.
+● Banner Line - Rooted in farming, Crafted with honesty, Made for real
+taste.
+● Product Description - Our banana chips are inspired by the banana-rich
+Nimar region. By sourcing locally, Zerothi supports farmers while
+delivering authentic regional taste to consumers.
+● Ingredients - “Will refer test report of Banana Chips”
+“ACTION BUTTON :- EXPLORE MORE FLAVOUR”
+Repeat the above process for the different flavors
+2) Ghee :-
+● Product images.
+● Banner Line -
+● Product Description -
+● Ingredients - “Will refer test report of Banana Chips”
+3) Oil :-
+● Product images.
+● Banner Line -
+● Product Description -
+● Ingredients - “Will refer test report of Banana Chips”
+4) Future Product Lines :- Banner with “COMING SOON”
+4. Contact Us :- Available at Footer Section or Bottom
+● Phone number
+● Email Address
+● Contact form
+● Google Maps integration
+● Social media links
+Web Roadmap - Status Sheet, THIS IS ROAD MAP FOR ZEROTHI , I WANT TO BUILD END TO END COMPLETE WEBITE WITH BACKEND AND COMPLETE WEBSITE LIKE ECOMMERSE PLATFORME , UNDERSTAND IN DETAIL ZEROTHI 2026 PDF  AND WEB ROADMAPE THAT AVALILIBLE IN OUR FOLDFER, NOW FRIST BUILD THE COMPLETE STEP BY STEP PLAN AND ROD MAP FOR BULDING ,THIS PROJECT , THIS IS LIKE COMPLETE ECMONERSE PROJECT THERE WE ARE SELLING PROJECT AND CUSTOMER CAN LOGIN AND ADD PRODUCT THERE CARD AND LIKE THE PROJDUCT , AND ORDER PROJEDUCT SE THE ORDER STATUS AND ALL , BUILD COMPLETE PROFESIONAL BRAND WEBSITE, USE PROFESIONAL FONT AND DESGIN , TAK REFRENCE FROM PDF ,WEB ROQDMAP , @contextScopeItemMention READ THIS PDF ALSO FOR BULING BETTER STEP BY STEP PLAN AND DESGIN 
