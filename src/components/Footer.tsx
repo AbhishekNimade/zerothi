@@ -13,9 +13,9 @@ export default function Footer() {
               <Image 
                 src="/logo.png" 
                 alt="Zerothi Logo" 
-                width={180} 
-                height={70} 
-                className="h-10 w-auto object-contain"
+                width={240} 
+                height={100} 
+                className="h-16 md:h-20 w-auto object-contain scale-110 md:scale-125 origin-left"
               />
             </Link>
             <p className="text-white/50 text-xs font-light leading-relaxed">

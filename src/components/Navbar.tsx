@@ -29,9 +29,9 @@ export default function Navbar() {
                 <Image 
                   src="/logo.png" 
                   alt="Zerothi Logo" 
-                  width={240} 
-                  height={100} 
-                  className="h-16 md:h-20 w-auto object-contain scale-[1.15] md:scale-125 origin-left"
+                  width={300} 
+                  height={120} 
+                  className="h-20 md:h-24 w-auto object-contain scale-[1.3] md:scale-[1.5] origin-left"
                   priority
                 />
               </Link>
