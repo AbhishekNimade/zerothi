@@ -53,7 +53,7 @@ export default function ContactPage() {
             Contact <span className="text-gradient-gold">Us</span>
           </h1>
           <p className="text-white/60 text-xs md:text-sm max-w-xl mx-auto font-light leading-relaxed">
-            Have questions about bulk orders, regional distribution, or our Leaf Logo farming methods? Drop us a line.
+            Have questions about bulk orders, regional distribution, or our Zerothi farming methods? Drop us a line.
           </p>
         </div>
       </section>

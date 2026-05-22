@@ -173,7 +173,7 @@ export default async function Home() {
           </p>
           <Link href="/about">
             <button className="px-8 py-4 border border-gold-500/50 hover:bg-gold-500 hover:text-black text-gold-400 font-bold text-xs tracking-widest uppercase transition-all rounded-sm cursor-pointer">
-              Read Our Full Leaf Logo Journey
+              Read Our Full Zerothi Journey
             </button>
           </Link>
         </div>
