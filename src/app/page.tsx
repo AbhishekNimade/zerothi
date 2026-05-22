@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { ArrowRight, Leaf, ShieldCheck, HeartHandshake } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { db } from "@/lib/db";
 
 export const revalidate = 0; // Don't cache so we always see inventory updates
@@ -33,11 +34,18 @@ export default async function Home() {
 
         {/* Hero Content */}
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
-          <div className="inline-block mb-6 px-4 py-1.5 rounded-full border border-gold-500/30 bg-gold-500/10 backdrop-blur-sm">
-            <span className="text-gold-300 text-xs font-semibold tracking-[0.25em] uppercase">Future Perspective</span>
+          <div className="mb-8 select-none">
+            <Image 
+              src="/logo.png" 
+              alt="Zerothi Logo" 
+              width={350} 
+              height={140} 
+              className="h-28 md:h-36 w-auto object-contain mx-auto scale-110"
+              priority
+            />
           </div>
           
-          <h1 className="font-cinzel text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
+          <h1 className="font-cinzel text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight uppercase tracking-wider">
             The Taste of <span className="text-gradient-gold">Nimar</span>
           </h1>
           
@@ -55,8 +63,11 @@ export default async function Home() {
               </button>
             </Link>
             <Link href="/products">
-              <button className="px-8 py-4 border border-gold-500/30 text-gold-400 font-bold text-xs tracking-widest uppercase hover:bg-gold-500/10 transition-all hover:border-gold-500 cursor-pointer rounded-sm">
-                Shop Catalog
+              <button className="group relative px-8 py-4 border border-gold-500/40 text-gold-400 hover:text-black font-bold text-xs tracking-widest uppercase overflow-hidden transition-all hover:scale-105 hover:border-gold-500 shadow-none hover:shadow-[0_0_30px_rgba(212,175,55,0.45)] cursor-pointer rounded-sm">
+                <span className="relative z-10">
+                  Shop Catalog
+                </span>
+                <div className="absolute inset-0 bg-gold-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out -z-10" />
               </button>
             </Link>
           </div>

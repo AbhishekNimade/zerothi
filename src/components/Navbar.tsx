@@ -29,35 +29,27 @@ export default function Navbar() {
                 <Image 
                   src="/logo.png" 
                   alt="Zerothi Logo" 
-                  width={300} 
-                  height={120} 
-                  className="h-20 md:h-24 w-auto object-contain scale-[1.3] md:scale-[1.5] origin-left"
+                  width={220} 
+                  height={80} 
+                  className="h-16 md:h-20 w-auto object-contain"
                   priority
                 />
               </Link>
             </div>
-            
-            {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center space-x-10">
-              <Link href="/" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Home</Link>
-              <Link href="/about" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Our Story</Link>
-              <Link href="/products" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Shop</Link>
-              <Link href="/contact" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Contact</Link>
-            </div>
+            {/* Right Side: Links and Actions */}
+            <div className="flex items-center space-x-6 md:space-x-10">
+              
+              {/* Desktop Navigation Links */}
+              <div className="hidden md:flex items-center space-x-8">
+                <Link href="/" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Home</Link>
+                <Link href="/about" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Our Story</Link>
+                <Link href="/products" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Shop</Link>
+                <Link href="/contact" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Contact</Link>
+              </div>
 
-            {/* Icons & Auth Section */}
-            <div className="hidden md:flex items-center space-x-8">
-              {/* Favorites Count */}
-              <Link href="/products?filter=liked" className="text-white/80 hover:text-gold-400 transition-colors relative">
-                <Heart className="w-5 h-5" />
-                {likedIds.length > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {likedIds.length}
-                  </span>
-                )}
-              </Link>
-
-              {/* Shopping Bag Icon */}
+              {/* Icons & Auth Section */}
+              <div className="flex items-center space-x-6">
+                {/* Shopping Bag Icon */}
               <button 
                 onClick={() => setIsCartOpen(true)}
                 className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer"
@@ -136,12 +128,13 @@ export default function Navbar() {
                 </Link>
               )}
             </div>
+          </div>
 
             {/* Mobile menu button */}
             <div className="flex items-center md:hidden gap-6">
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="text-white/80 hover:text-gold-400 relative focus:outline-none"
+                className="text-white/80 hover:text-gold-400 relative focus:outline-none cursor-pointer"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {cartCount > 0 && (
@@ -151,11 +144,11 @@ export default function Navbar() {
                 )}
               </button>
 
-              <button 
+              <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="text-white hover:text-gold-400 focus:outline-none"
+                className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors cursor-pointer"
               >
-                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
