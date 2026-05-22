@@ -78,7 +78,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
       </section>
 
-      {/* Interactive Y-Leaf Journey Steps */}
+      {/* Interactive Zerothi Journey Steps */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold text-gold-500 tracking-[0.3em] uppercase block mb-2">How it is made</span>
