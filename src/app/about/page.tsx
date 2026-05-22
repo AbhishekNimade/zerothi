@@ -67,7 +67,7 @@ export default function AboutPage() {
             <span className="text-gold-300 text-xs font-semibold tracking-[0.2em] uppercase">Brand Genesis</span>
           </div>
           <h1 className="font-cinzel text-5xl md:text-7xl font-bold text-white mb-6">
-            The <span className="text-gradient-gold">Y-Leaf</span> Journey
+            The <span className="text-gradient-gold">Leaf Logo</span> Journey
           </h1>
           <p className="text-sm md:text-base text-white/70 font-light leading-relaxed max-w-2xl mx-auto tracking-wide">
             From the fertile soils of Nimar to your taste buds. Zerothi was born from a simple idea: to deliver the authentic regional flavors of Madhya Pradesh to modern homes with absolute honesty and consistency.
