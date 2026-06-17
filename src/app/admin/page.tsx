@@ -324,7 +324,7 @@ export default function AdminPage() {
                   className="glass-card p-6 rounded-2xl border border-white/5 bg-black/40 flex gap-4 items-center"
                 >
                   <div className="w-20 h-20 bg-neutral-950 rounded-lg overflow-hidden border border-white/10 relative flex-shrink-0">
-                    <Image src={p.image} alt={p.name} fill className="object-cover" />
+                    <Image src={p.image} alt={p.name} fill className="object-contain p-2" />
                   </div>
 
                   <div className="flex-1 min-w-0 space-y-2">

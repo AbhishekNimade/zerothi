@@ -82,7 +82,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         {/* Gallery Image Display */}
         <div className="space-y-4">
-          <div className="aspect-[4/3] w-full bg-neutral-950 rounded-2xl overflow-hidden relative border border-white/10 group">
+          <div className="aspect-square w-full bg-neutral-950 rounded-2xl overflow-hidden relative border border-white/10 group">
             {discount > 0 && (
               <div className="absolute top-6 left-6 z-10 bg-gold-500 text-black text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-wider">
                 {discount}% OFF
@@ -93,18 +93,18 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
               src={product.image} 
               alt={product.name} 
               fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-105"
               priority
             />
           </div>
           
           {product.hoverImage && (
             <div className="grid grid-cols-2 gap-4">
-              <div className="aspect-[4/3] rounded-xl overflow-hidden relative border border-white/5 bg-neutral-950">
-                <Image src={product.image} alt={product.name} fill className="object-cover" />
+              <div className="aspect-square rounded-xl overflow-hidden relative border border-white/5 bg-neutral-950">
+                <Image src={product.image} alt={product.name} fill className="object-contain p-4" />
               </div>
-              <div className="aspect-[4/3] rounded-xl overflow-hidden relative border border-white/5 bg-neutral-950">
-                <Image src={product.hoverImage} alt={`${product.name} alt`} fill className="object-cover" />
+              <div className="aspect-square rounded-xl overflow-hidden relative border border-white/5 bg-neutral-950">
+                <Image src={product.hoverImage} alt={`${product.name} alt`} fill className="object-contain p-4" />
               </div>
             </div>
           )}

@@ -46,7 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="glass-card rounded-2xl overflow-hidden border border-white/5 hover:border-gold-500/30 transition-all duration-300 flex flex-col group relative bg-black/40"
     >
       {/* Product Image Area */}
-      <div className="aspect-[4/3] w-full bg-neutral-950 overflow-hidden relative border-b border-white/5">
+      <div className="aspect-square w-full bg-neutral-950 overflow-hidden relative border-b border-white/5">
         {/* Floating Badges */}
         {discount > 0 && !isFuture && (
           <div className="absolute top-4 left-4 z-10 bg-gold-500 text-black text-[10px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-wider">
@@ -75,14 +75,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.image} 
             alt={product.name} 
             fill
-            className={`object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
+            className={`object-contain p-4 transition-transform duration-700 ease-out group-hover:scale-105 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
           />
           {product.hoverImage && (
             <Image 
               src={product.hoverImage} 
               alt={`${product.name} alternate`} 
               fill
-              className="object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"
+              className="object-contain p-4 absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"
             />
           )}
         </Link>

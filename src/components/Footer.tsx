@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="space-y-4 md:col-span-1">
             <Link href="/" className="inline-block mb-2">
               <Image 
-                src="/logo.png" 
+                src="/Logo%20Zerothi/Medium%20Logo%20Zerothi-04.png" 
                 alt="Zerothi Logo" 
                 width={240} 
                 height={100} 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { ArrowRight, Lock, Mail, User, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 function SignupForm() {
-  const { register } = useAuth();
+  const { register, checkUserSession } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -19,8 +19,79 @@ function SignupForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
   const redirect = searchParams.get("redirect") || "/";
+
+  const handleGoogleLogin = async (response: any) => {
+    setIsGoogleSubmitting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        await checkUserSession();
+        router.push(redirect);
+        router.refresh();
+      } else {
+        setError(data.error || "Google Sign-In failed.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred during Google Sign-In.");
+    } finally {
+      setIsGoogleSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    let script = document.querySelector(`script[src="https://accounts.google.com/gsi/client"]`) as HTMLScriptElement;
+    
+    const initGoogle = () => {
+      const gWindow = window as any;
+      if (gWindow.google) {
+        gWindow.google.accounts.id.initialize({
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1041170701048-placeholder-client-id.apps.googleusercontent.com",
+          callback: handleGoogleLogin,
+        });
+        
+        const buttonContainer = document.getElementById("googleSignInButton");
+        if (buttonContainer) {
+          gWindow.google.accounts.id.renderButton(buttonContainer, {
+            theme: "dark",
+            size: "large",
+            width: buttonContainer.clientWidth || 350,
+            text: "signup_with",
+            shape: "rectangular",
+          });
+        }
+      }
+    };
+
+    if (!script) {
+      script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = initGoogle;
+      document.body.appendChild(script);
+    } else {
+      initGoogle();
+    }
+
+    const handleResize = () => {
+      initGoogle();
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [redirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,7 +243,22 @@ function SignupForm() {
             </button>
           </form>
 
-          <div className="mt-8 text-center border-t border-white/5 pt-6 text-sm text-white/40 font-light">
+          {/* Or Divider */}
+          <div className="relative my-6 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10"></div>
+            </div>
+            <span className="relative px-3 bg-[#0a0a0a] text-xs font-semibold uppercase tracking-wider text-white/40">
+              Or Sign Up With
+            </span>
+          </div>
+
+          {/* Google Sign-in Button */}
+          <div className="flex justify-center w-full min-h-[44px]">
+            <div id="googleSignInButton" className="w-full flex justify-center" />
+          </div>
+
+          <div className="mt-6 text-center border-t border-white/5 pt-6 text-sm text-white/40 font-light">
             Already have an account?{" "}
             <Link 
               href={redirect !== "/" ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login"} 

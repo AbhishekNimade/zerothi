@@ -28,7 +28,7 @@ export default async function ProductsPage() {
             Our <span className="text-gradient-gold">Products</span>
           </h1>
           <p className="text-white/60 text-xs md:text-sm max-w-xl mx-auto font-light leading-relaxed">
-            Authentic banana chips, wood-churned oils, and pure A2 ghee sourced and handcrafted with integrity.
+            Authentic banana chips sourced and handcrafted with integrity from local Nimar farmers.
           </p>
         </div>
 

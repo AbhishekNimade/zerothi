@@ -36,11 +36,11 @@ export default async function Home() {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
           <div className="mb-8 select-none">
             <Image 
-              src="/logo.png" 
+              src="/Logo%20Zerothi/Large%20Logo%20Zerothi-05.png" 
               alt="Zerothi Logo" 
-              width={350} 
-              height={140} 
-              className="h-28 md:h-36 w-auto object-contain mx-auto scale-110"
+              width={500} 
+              height={200} 
+              className="h-36 sm:h-44 md:h-52 lg:h-60 w-auto object-contain mx-auto scale-110"
               priority
             />
           </div>
@@ -212,7 +212,7 @@ export default async function Home() {
                   {"★".repeat(5)}
                 </div>
                 <p className="text-white/80 text-xs italic font-light leading-relaxed mb-6">
-                  "I've been cooking with the Cold Pressed Groundnut oil for three weeks now. The natural aroma is absolutely amazing, and there are no additives. Reminds me of childhood cow-driven press oil!"
+                  "The Tomato Banana chips are a household favorite now! My kids absolutely love the tangy tomato spice mix, and I love that they are made without any artificial preservatives."
                 </p>
               </div>
               <div>
@@ -228,7 +228,7 @@ export default async function Home() {
                   {"★".repeat(5)}
                 </div>
                 <p className="text-white/80 text-xs italic font-light leading-relaxed mb-6">
-                  "The Nimar Cow Ghee has that perfect granular texture and a rich, sweet aroma. Seeing that they support women groups in Nimar makes buying it even more meaningful. Exceptional product!"
+                  "The Pudina Banana chips have this incredibly fresh, cooling mint aroma mixed with classic Nimar spices. Hands down the best mint-flavored chips I have ever had!"
                 </p>
               </div>
               <div>

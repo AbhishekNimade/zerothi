@@ -44,15 +44,12 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
     }
   }, [searchParams]);
 
-  // Extract unique categories (except future if we want)
-  const categories = ["ALL", "BANANA_CHIPS", "COW_GHEE", "COLD_PRESSED_OILS", "FUTURE"];
+  // Extract unique categories
+  const categories = ["ALL", "BANANA_CHIPS"];
 
   const formatCategoryName = (cat: string) => {
     if (cat === "ALL") return "All Products";
     if (cat === "BANANA_CHIPS") return "Banana Chips";
-    if (cat === "COW_GHEE") return "Cow Ghee";
-    if (cat === "COLD_PRESSED_OILS") return "Pressed Oils";
-    if (cat === "FUTURE") return "Future Range";
     return cat;
   };
 

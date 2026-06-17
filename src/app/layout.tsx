@@ -26,7 +26,7 @@ export default function RootLayout({
               "@type": "Organization",
               "name": "ZEROTHI",
               "url": "https://zerothi.com",
-              "logo": "https://zerothi.com/logo.png",
+              "logo": "https://zerothi.com/Logo%20Zerothi/Medium%20Logo%20Zerothi-04.png",
               "description": "Traditional purity from Nimar, empowering women and supporting farmers.",
               "sameAs": [
                 "https://instagram.com/zerothi"

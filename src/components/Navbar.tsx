@@ -27,7 +27,7 @@ export default function Navbar() {
             <div className="flex items-center h-full">
               <Link href="/" className="flex-shrink-0 flex items-center h-full py-2">
                 <Image 
-                  src="/logo.png" 
+                  src="/Logo%20Zerothi/Small%20Logo%20Zerothi-03.png" 
                   alt="Zerothi Logo" 
                   width={220} 
                   height={80} 
@@ -37,10 +37,10 @@ export default function Navbar() {
               </Link>
             </div>
             {/* Right Side: Links and Actions */}
-            <div className="flex items-center space-x-6 md:space-x-10">
+            <div className="hidden md:flex items-center space-x-6 md:space-x-10 max-md:!hidden">
               
               {/* Desktop Navigation Links */}
-              <div className="hidden md:flex items-center space-x-8">
+              <div className="hidden md:flex items-center space-x-8 max-md:!hidden">
                 <Link href="/" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Home</Link>
                 <Link href="/about" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Our Story</Link>
                 <Link href="/products" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Shop</Link>
@@ -50,103 +50,92 @@ export default function Navbar() {
               {/* Icons & Auth Section */}
               <div className="flex items-center space-x-6">
                 {/* Shopping Bag Icon */}
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer"
-              >
-                <ShoppingBag className="w-5 h-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
+                <button 
+                  onClick={() => setIsCartOpen(true)}
+                  className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
 
-              {/* Auth Dropdown / Login */}
-              {loading ? (
-                <div className="w-6 h-6 border-2 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
-              ) : user ? (
-                <div className="relative">
-                  <button 
-                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                    className="flex items-center gap-2 px-4 py-2 border border-gold-500/20 hover:border-gold-500/60 rounded-full transition-all bg-gold-500/5 text-gold-300 text-xs tracking-wider uppercase font-semibold focus:outline-none cursor-pointer"
-                  >
-                    <UserIcon className="w-3.5 h-3.5" />
-                    {user.name.split(" ")[0]}
-                  </button>
+                {/* Auth Dropdown / Login */}
+                {loading ? (
+                  <div className="w-6 h-6 border-2 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+                ) : user ? (
+                  <div className="relative">
+                    <button 
+                      onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                      className="flex items-center gap-2 px-4 py-2 border border-gold-500/20 hover:border-gold-500/60 rounded-full transition-all bg-gold-500/5 text-gold-300 text-xs tracking-wider uppercase font-semibold focus:outline-none cursor-pointer"
+                    >
+                      <UserIcon className="w-3.5 h-3.5" />
+                      {user.name.split(" ")[0]}
+                    </button>
 
-                  <AnimatePresence>
-                    {isUserDropdownOpen && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-3 w-52 rounded-xl bg-black border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] overflow-hidden py-1 z-50"
-                      >
-                        <div className="px-4 py-3 border-b border-white/5">
-                          <p className="text-white text-xs font-semibold">{user.name}</p>
-                          <p className="text-white/40 text-[10px] truncate mt-0.5">{user.email}</p>
-                        </div>
+                    <AnimatePresence>
+                      {isUserDropdownOpen && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-3 w-52 rounded-xl bg-black border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] overflow-hidden py-1 z-50"
+                        >
+                          <div className="px-4 py-3 border-b border-white/5">
+                            <p className="text-white text-xs font-semibold">{user.name}</p>
+                            <p className="text-white/40 text-[10px] truncate mt-0.5">{user.email}</p>
+                          </div>
 
-                        {user.role === "ADMIN" && (
+                          {user.role === "ADMIN" && (
+                            <Link 
+                              href="/admin" 
+                              onClick={() => setIsUserDropdownOpen(false)}
+                              className="flex items-center gap-2 px-4 py-2.5 text-xs text-amber-400 hover:bg-white/5 transition-colors font-medium"
+                            >
+                              <ShieldAlert className="w-4 h-4" /> Admin Panel
+                            </Link>
+                          )}
+
                           <Link 
-                            href="/admin" 
+                            href="/orders" 
                             onClick={() => setIsUserDropdownOpen(false)}
-                            className="flex items-center gap-2 px-4 py-2.5 text-xs text-amber-400 hover:bg-white/5 transition-colors font-medium"
+                            className="flex items-center gap-2 px-4 py-2.5 text-xs text-white/80 hover:bg-white/5 transition-colors"
                           >
-                            <ShieldAlert className="w-4 h-4" /> Admin Panel
+                            <ShoppingBag className="w-4 h-4" /> My Orders
                           </Link>
-                        )}
 
-                        <Link 
-                          href="/orders" 
-                          onClick={() => setIsUserDropdownOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2.5 text-xs text-white/80 hover:bg-white/5 transition-colors"
-                        >
-                          <ShoppingBag className="w-4 h-4" /> My Orders
-                        </Link>
-
-                        <button 
-                          onClick={() => {
-                            logout();
-                            setIsUserDropdownOpen(false);
-                          }}
-                          className="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs text-red-400 hover:bg-white/5 transition-colors border-t border-white/5 cursor-pointer"
-                        >
-                          <LogOut className="w-4 h-4" /> Log Out
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ) : (
-                <Link href="/login">
-                  <button className="px-6 py-2.5 text-xs font-semibold border border-gold-500/50 hover:bg-gold-500/10 text-gold-400 hover:text-gold-300 transition-all rounded-sm uppercase tracking-[0.15em] cursor-pointer">
-                    Login
-                  </button>
-                </Link>
-              )}
-            </div>
-          </div>
-
-            {/* Mobile menu button */}
-            <div className="flex items-center md:hidden gap-6">
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="text-white/80 hover:text-gold-400 relative focus:outline-none cursor-pointer"
-              >
-                <ShoppingBag className="w-5 h-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
+                          <button 
+                            onClick={() => {
+                              logout();
+                              setIsUserDropdownOpen(false);
+                            }}
+                            className="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs text-red-400 hover:bg-white/5 transition-colors border-t border-white/5 cursor-pointer"
+                          >
+                            <LogOut className="w-4 h-4" /> Log Out
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link href="/login">
+                    <button className="px-6 py-2.5 text-xs font-semibold border border-gold-500/50 hover:bg-gold-500/10 text-gold-400 hover:text-gold-300 transition-all rounded-sm uppercase tracking-[0.15em] cursor-pointer">
+                      Login
+                    </button>
+                  </Link>
                 )}
-              </button>
+              </div>
+            </div>
 
+            {/* Mobile menu button (Hamburger) - ONLY hamburger icon appears here */}
+            <div className="flex items-center md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors cursor-pointer"
+                className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors cursor-pointer p-2"
+                aria-label="Toggle Menu"
               >
                 {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -171,6 +160,23 @@ export default function Navbar() {
                 <Link href="/products?filter=liked" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold flex items-center gap-2">
                   <Heart className="w-4 h-4 text-red-500" /> Favorites ({likedIds.length})
                 </Link>
+
+                <button 
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsCartOpen(true);
+                  }}
+                  className="w-full text-left px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold flex items-center justify-between cursor-pointer focus:outline-none"
+                >
+                  <span className="flex items-center gap-2">
+                    <ShoppingBag className="w-4 h-4 text-gold-400" /> Cart
+                  </span>
+                  {cartCount > 0 && (
+                    <span className="bg-gold-500 text-black text-[9px] font-bold px-2 py-0.5 rounded-full">
+                      {cartCount} items
+                    </span>
+                  )}
+                </button>
 
                 <div className="border-t border-white/5 mt-4 pt-4 px-3">
                   {user ? (
@@ -280,7 +286,7 @@ export default function Navbar() {
                           src={item.image} 
                           alt={item.name} 
                           fill
-                          className="object-cover"
+                          className="object-contain p-1"
                         />
                       </div>
 
