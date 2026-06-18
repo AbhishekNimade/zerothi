@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/db";
 
-export const revalidate = 0; // Don't cache so we always see inventory updates
+// Statically exported home page
 
 export default async function Home() {
   // Fetch featured products from the SQLite database
