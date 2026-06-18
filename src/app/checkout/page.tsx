@@ -61,34 +61,31 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          phone,
-          address,
-          city,
-          postalCode,
-          items: cartItems.map((item) => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity
-          }))
-        })
-      });
+      const itemsList = cartItems.map(item => `- ${item.quantity}x ${item.name} (₹${item.price} each)`).join("\n");
+      const message = `Hi ZEROTHI! I want to place an order:
 
-      const data = await res.json();
-      if (res.ok) {
-        clearCart();
-        router.push("/orders");
-      } else {
-        setError(data.error || "Failed to process order.");
-      }
+*Order Details:*
+${itemsList}
+
+*Cart Subtotal:* ₹${cartTotal}
+*Delivery Charge:* ${shippingCharge === 0 ? "FREE" : `₹${shippingCharge}`}
+*Total Amount:* ₹${finalTotal}
+
+*Shipping Details:*
+- Name: ${name}
+- Phone: ${phone}
+- Address: ${address}, ${city} - ${postalCode}
+- Payment Mode: Cash on Delivery (COD)
+
+Please confirm my order. Thanks!`;
+
+      const whatsappNumber = "919876543210";
+      const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      
+      clearCart();
+      window.location.href = url;
     } catch (err) {
       setError("Something went wrong. Please try again.");
-    } finally {
       setIsSubmitting(false);
     }
   };

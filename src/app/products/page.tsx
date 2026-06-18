@@ -2,8 +2,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductsGrid from "@/components/ProductsGrid";
 import { db } from "@/lib/db";
+import { Suspense } from "react";
 
-export const revalidate = 0; // Ensure fresh data on every visit
+// Statically exported page
 
 export default async function ProductsPage() {
   let products: any[] = [];
@@ -38,7 +39,9 @@ export default async function ProductsPage() {
 
       {/* Product Catalog Section */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ProductsGrid products={products} />
+        <Suspense fallback={<div className="text-center py-20 text-white/40 text-sm">Loading catalog...</div>}>
+          <ProductsGrid products={products} />
+        </Suspense>
       </section>
 
       <Footer />

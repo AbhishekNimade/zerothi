@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
-export const revalidate = 0; // Ensure fresh batched inventory details are shown
+// Statically exported page
 
 interface PageProps {
   params: Promise<{
@@ -71,4 +71,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <Footer />
     </main>
   );
+}
+
+export async function generateStaticParams() {
+  try {
+    const products = await db.product.findMany({
+      select: { slug: true }
+    });
+    return products.map((p) => ({
+      slug: p.slug,
+    }));
+  } catch (error) {
+    console.error("Failed to generate static params for products:", error);
+    return [];
+  }
 }

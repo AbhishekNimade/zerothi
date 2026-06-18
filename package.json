@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3111",
     "build": "next build",
+    "build:static": "mv src/app/api src/api-disabled 2>/dev/null || true; next build; mv src/api-disabled src/app/api 2>/dev/null || true",
     "start": "next start -p 3111",
     "lint": "eslint"
   },
