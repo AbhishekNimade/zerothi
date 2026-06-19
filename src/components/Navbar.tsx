@@ -64,7 +64,7 @@ export default function Navbar() {
 
                 {/* Auth Dropdown / Login */}
                 {loading ? (
-                  <div className="w-6 h-6 border-2 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+                  null
                 ) : user ? (
                   <div className="relative">
                     <button 

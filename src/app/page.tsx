@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import FeaturedProductsClient from "@/components/FeaturedProductsClient";
 import { ArrowRight, Leaf, ShieldCheck, HeartHandshake } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -149,17 +149,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        {featuredProducts.length === 0 ? (
-          <div className="text-center py-12 text-white/40 text-sm">
-            No products available at the moment. Run database seed to populate.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
+        <FeaturedProductsClient initialProducts={featuredProducts} />
       </section>
 
       {/* Brand Journey Teaser Banner */}

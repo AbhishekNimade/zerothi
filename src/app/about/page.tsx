@@ -66,8 +66,18 @@ export default function AboutPage() {
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-gold-500/30 bg-gold-500/10">
             <span className="text-gold-300 text-xs font-semibold tracking-[0.2em] uppercase">Brand Genesis</span>
           </div>
-          <h1 className="font-cinzel text-5xl md:text-7xl font-bold text-white mb-6">
-            The <span className="text-gradient-gold">Zerothi</span> Journey
+          <h1 className="font-cinzel text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 md:gap-x-6">
+            <span>The</span> 
+            <span className="relative inline-block w-[140px] sm:w-[180px] md:w-[260px] h-[40px] sm:h-[55px] md:h-[75px] align-middle">
+              <Image 
+                src="/Logo%20Zerothi/Medium%20Logo%20Zerothi-04.png" 
+                alt="Zerothi" 
+                fill 
+                className="object-contain" 
+                priority
+              />
+            </span> 
+            <span>Journey</span>
           </h1>
           <p className="text-sm md:text-base text-white/70 font-light leading-relaxed max-w-2xl mx-auto tracking-wide">
             From the fertile soils of Nimar to your taste buds. Zerothi was born from a simple idea: to deliver the authentic regional flavors of Madhya Pradesh to modern homes with absolute honesty and consistency.

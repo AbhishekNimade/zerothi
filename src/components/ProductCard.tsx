@@ -92,7 +92,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="p-6 flex-1 flex flex-col justify-between">
         <div>
           <span className="text-[10px] font-bold text-gold-500 uppercase tracking-[0.2em] mb-1.5 block">
-            {product.category}
+            {product.category === "BANANA_CHIPS" 
+              ? "Banana Chips" 
+              : product.category === "COW_GHEE" 
+              ? "Pure Ghee" 
+              : product.category === "OIL" 
+              ? "Wood-Pressed Oil" 
+              : product.category}
           </span>
           <Link href={isFuture ? "#" : `/products/${product.slug}`}>
             <h3 className="font-cinzel text-lg text-white font-bold tracking-wide group-hover:text-gold-400 transition-colors line-clamp-1 mb-2">

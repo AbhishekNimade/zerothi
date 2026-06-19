@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLikes } from "@/context/LikesContext";
 import { Heart, ShoppingBag, Plus, Minus, ArrowLeft, Star, Leaf, Check } from "lucide-react";
@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
+import { isSheetsConfigured, fetchProductsFromSheet } from "@/lib/sheets";
 
 interface Product {
   id: string;
@@ -35,16 +36,102 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"desc" | "ingredients" | "nutritional">("desc");
 
-  const liked = isLiked(product.id);
-  const isOutOfStock = product.stock <= 0;
+  const [localProduct, setLocalProduct] = useState(product);
+
+  useEffect(() => {
+    async function loadDynamicProduct() {
+      try {
+        let matched = null;
+
+        if (isSheetsConfigured()) {
+          const sheetProducts = await fetchProductsFromSheet();
+          if (sheetProducts) {
+            matched = sheetProducts.find((sp: any) => sp.slug === product.slug || sp.id.toString() === product.id);
+          }
+        }
+
+        if (!matched) {
+          const localProductsStr = localStorage.getItem("zerothi_products");
+          if (localProductsStr) {
+            const localProducts = JSON.parse(localProductsStr);
+            matched = localProducts.find((lp: any) => lp.slug === product.slug);
+          }
+        }
+
+        if (matched) {
+          setLocalProduct(prev => ({
+            ...prev,
+            price: Number(matched.price),
+            stock: Number(matched.stock)
+          }));
+        }
+      } catch (e) {
+        console.error("Failed to parse local products override", e);
+      }
+    }
+    loadDynamicProduct();
+  }, [product]);
+
+  const liked = isLiked(localProduct.id);
+  const isOutOfStock = localProduct.stock <= 0;
+
+  const isChips = localProduct.category === "BANANA_CHIPS";
+  const isGhee = localProduct.category === "COW_GHEE";
+  const isOil = localProduct.category === "OIL";
+  const hasSizes = isChips || isGhee || isOil;
+
+  const sizeOptions = isChips 
+    ? [
+        { label: "30g", multiplier: 0.125, fixedPrice: 10, fixedOriginalPrice: 15 },
+        { label: "100g", multiplier: 0.55 },
+        { label: "200g", multiplier: 1.0 }
+      ]
+    : isGhee
+    ? [
+        { label: "500ml", multiplier: 1.0 }
+      ]
+    : isOil
+    ? [
+        { label: "1L", multiplier: 1.0 }
+      ]
+    : [];
+
+  const [selectedSize, setSelectedSize] = useState(() => {
+    if (isChips) return "200g";
+    if (isGhee) return "500ml";
+    if (isOil) return "1L";
+    return "";
+  });
+
+  // Reset size selector when switching products
+  useEffect(() => {
+    if (isChips) setSelectedSize("200g");
+    else if (isGhee) setSelectedSize("500ml");
+    else if (isOil) setSelectedSize("1L");
+    else setSelectedSize("");
+  }, [localProduct.id, isChips, isGhee, isOil]);
+
+  const selectedOption = hasSizes
+    ? sizeOptions.find(o => o.label === selectedSize)
+    : null;
+
+  const currentMultiplier = selectedOption?.multiplier || 1.0;
+
+  const currentPrice = selectedOption?.fixedPrice !== undefined
+    ? selectedOption.fixedPrice
+    : Math.round(localProduct.price * currentMultiplier);
+
+  const currentOriginalPrice = selectedOption?.fixedOriginalPrice !== undefined
+    ? selectedOption.fixedOriginalPrice
+    : Math.round(localProduct.originalPrice * currentMultiplier);
 
   // Calculate discount percentage
-  const discount = product.originalPrice > product.price 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  const discount = currentOriginalPrice > currentPrice 
+    ? Math.round(((currentOriginalPrice - currentPrice) / currentOriginalPrice) * 100)
     : 0;
 
   const handleIncrement = () => {
-    if (quantity < product.stock) {
+    if (quantity < localProduct.stock) {
       setQuantity(quantity + 1);
     }
   };
@@ -56,7 +143,18 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
   };
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    if (hasSizes) {
+      const customProduct = {
+        ...localProduct,
+        id: `${localProduct.id}-${selectedSize}`,
+        name: `${localProduct.name} (${selectedSize})`,
+        price: currentPrice,
+        originalPrice: currentOriginalPrice
+      };
+      addToCart(customProduct, quantity);
+    } else {
+      addToCart(localProduct, quantity);
+    }
   };
 
   // Mocked details based on regional categories
@@ -138,13 +236,37 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
           <div className="p-6 bg-white/5 rounded-xl border border-white/5 space-y-2">
             <span className="text-white/40 text-[10px] uppercase font-bold tracking-wider block">Price</span>
             <div className="flex items-baseline gap-4">
-              <span className="text-gold-400 text-3xl font-extrabold">₹{product.price}</span>
-              {product.originalPrice > product.price && (
-                <span className="text-white/30 text-sm line-through">₹{product.originalPrice}</span>
+              <span className="text-gold-400 text-3xl font-extrabold">₹{currentPrice}</span>
+              {currentOriginalPrice > currentPrice && (
+                <span className="text-white/30 text-sm line-through">₹{currentOriginalPrice}</span>
               )}
             </div>
             <p className="text-[10px] text-white/40 font-light mt-1">Inclusive of all local regional taxes.</p>
           </div>
+
+          {/* Size / Weight Selection */}
+          {hasSizes && (
+            <div className="space-y-3">
+              <span className="text-white/70 text-xs uppercase tracking-wider block font-semibold">
+                Select Size / Weight
+              </span>
+              <div className="flex flex-wrap gap-3">
+                {sizeOptions.map((opt) => (
+                  <button
+                    key={opt.label}
+                    onClick={() => setSelectedSize(opt.label)}
+                    className={`px-5 py-2.5 text-xs font-semibold rounded-lg border transition-all duration-300 cursor-pointer ${
+                      selectedSize === opt.label
+                        ? "bg-gold-500 border-gold-500 text-black shadow-[0_0_15px_rgba(212,175,55,0.25)]"
+                        : "border-white/10 hover:border-white/20 text-white/70 hover:text-white bg-white/5 hover:bg-white/10"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Add to Cart Controls */}
           {isOutOfStock ? (
@@ -262,8 +384,8 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
             You May Also <span className="text-gradient-gold">Like</span>
           </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {relatedProducts.map((p) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {relatedProducts.slice(0, 3).map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>

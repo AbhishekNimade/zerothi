@@ -71,13 +71,13 @@ export default function ContactPage() {
 
               <div className="space-y-4">
                 {/* Phone */}
-                <a href="tel:+919876543210" className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-gold-500/20 transition-all group">
+                <a href="tel:+919425340003" className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-gold-500/20 transition-all group">
                   <div className="w-10 h-10 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-400 group-hover:bg-gold-500 group-hover:text-black transition-colors">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
                     <h5 className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Call / WhatsApp</h5>
-                    <p className="text-white text-sm font-semibold mt-0.5">+91 98765 43210</p>
+                    <p className="text-white text-sm font-semibold mt-0.5">+91 94253 40003</p>
                   </div>
                 </a>
 

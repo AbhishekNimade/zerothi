@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { ShoppingBag, CreditCard, ChevronRight, Loader2, ArrowRight, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { saveOrderToSheet, fetchOrdersFromSheet, isSheetsConfigured } from "@/lib/sheets";
 
 export default function CheckoutPage() {
   const { user, loading: authLoading } = useAuth();
@@ -24,26 +25,61 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Redirect to login if not authenticated
+  // Pre-fill name if user is logged in (dev mode)
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.push(`/login?redirect=/checkout`);
-    } else if (user) {
+    if (user) {
       setName(user.name);
     }
-  }, [user, authLoading, router]);
-
-  if (authLoading) {
-    return (
-      <main className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-gold-500 animate-spin" />
-      </main>
-    );
-  }
+  }, [user]);
 
   // Calculate pricing rules
   const shippingCharge = cartTotal > 500 ? 0 : 50;
   const finalTotal = cartTotal + shippingCharge;
+
+  // Dynamically calculate sequential order ID starting from 1001
+  const getNextOrderId = async (): Promise<string> => {
+    let maxId = 1000;
+
+    // 1. Try to query sheets
+    if (isSheetsConfigured()) {
+      try {
+        const sheetOrders = await fetchOrdersFromSheet("");
+        if (sheetOrders && sheetOrders.length > 0) {
+          sheetOrders.forEach((o: any) => {
+            const orderIdStr = (o.OrderID || o.id || "").toString();
+            // extract digits only
+            const digits = orderIdStr.replace(/\D/g, "");
+            const numericId = parseInt(digits);
+            if (!isNaN(numericId) && numericId > maxId) {
+              maxId = numericId;
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("Failed to query order IDs from sheet, checking local storage:", err);
+      }
+    }
+
+    // 2. Check local storage
+    try {
+      const localOrdersStr = localStorage.getItem("zerothi_orders");
+      if (localOrdersStr) {
+        const localOrders = JSON.parse(localOrdersStr);
+        localOrders.forEach((o: any) => {
+          const orderIdStr = (o.id || "").toString();
+          const digits = orderIdStr.replace(/\D/g, "");
+          const numericId = parseInt(digits);
+          if (!isNaN(numericId) && numericId > maxId) {
+            maxId = numericId;
+          }
+        });
+      }
+    } catch (e) {
+      console.error("Failed to parse local order IDs:", e);
+    }
+
+    return (maxId + 1).toString();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,8 +97,15 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
+      // Calculate next sequential Order ID (starts at 1001, 1002, etc.)
+      const nextId = await getNextOrderId();
+      const orderId = nextId;
+
       const itemsList = cartItems.map(item => `- ${item.quantity}x ${item.name} (₹${item.price} each)`).join("\n");
+      
       const message = `Hi ZEROTHI! I want to place an order:
+
+*Order ID:* #${orderId}
 
 *Order Details:*
 ${itemsList}
@@ -79,7 +122,65 @@ ${itemsList}
 
 Please confirm my order. Thanks!`;
 
-      const whatsappNumber = "919876543210";
+      // Save order to local storage
+      const newOrder = {
+        id: orderId,
+        date: new Date().toISOString(),
+        items: cartItems.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image
+        })),
+        subtotal: cartTotal,
+        shipping: shippingCharge,
+        total: finalTotal,
+        status: "PENDING",
+        shippingDetails: {
+          name,
+          phone,
+          address,
+          city,
+          postalCode
+        },
+        userEmail: user?.email || "anonymous"
+      };
+
+      try {
+        const existingOrders = JSON.parse(localStorage.getItem("zerothi_orders") || "[]");
+        existingOrders.unshift(newOrder);
+        localStorage.setItem("zerothi_orders", JSON.stringify(existingOrders));
+      } catch (e) {
+        console.error("Failed to save order in local storage", e);
+      }
+
+      // Deduct inventory levels in local storage fallback
+      try {
+        const localProductsStr = localStorage.getItem("zerothi_products");
+        if (localProductsStr) {
+          const localProducts = JSON.parse(localProductsStr);
+          const updated = localProducts.map((p: any) => {
+            const orderItem = cartItems.find(item => item.name.includes(p.name) || p.name.includes(item.name));
+            if (orderItem) {
+              return { ...p, stock: Math.max(0, p.stock - orderItem.quantity) };
+            }
+            return p;
+          });
+          localStorage.setItem("zerothi_products", JSON.stringify(updated));
+        }
+      } catch (e) {
+        console.error("Local stock deduction failed:", e);
+      }
+
+      // Save order to Google Sheets securely (triggers atomic stock deduction there too)
+      try {
+        saveOrderToSheet(newOrder);
+      } catch (e) {
+        console.error("Failed to save order in Google Sheet", e);
+      }
+
+      const whatsappNumber = "919425340003";
       const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
       
       clearCart();

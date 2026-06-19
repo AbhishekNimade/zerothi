@@ -73,6 +73,54 @@ async function main() {
       isFeatured: true,
       bannerLine: "Refreshing Mint, crafted for authentic taste.",
       ingredients: "Fresh Bananas, Refined Oil, Pudina (Mint) Powder, Black Salt, Iodized Salt, Dry Mango Powder, Spices"
+    },
+    {
+      name: "Pure Cow Ghee",
+      slug: "pure-cow-ghee",
+      description: "Handcrafted using traditional granular curd churning methods in the Nimar region. Rich golden color, granular texture, and absolute purity.",
+      price: 1100,
+      originalPrice: 1300,
+      category: "COW_GHEE",
+      image: "/Product%20Image/Cow%20Ghee%20Mockup-05.png",
+      hoverImage: null,
+      stock: 150,
+      rating: 4.9,
+      reviewsCount: 64,
+      isFeatured: true,
+      bannerLine: "Granular Purity, Handcrafted with Care.",
+      ingredients: "100% Clarified Butter Fat (Cow Milk Fat)"
+    },
+    {
+      name: "Wood-Pressed Groundnut Oil",
+      slug: "wood-pressed-groundnut-oil",
+      description: "Traditional wood-pressed groundnut oil, cold-pressed from premium quality seeds sourced directly from Nimar farmers. 100% natural, unrefined, and chemical-free.",
+      price: 450,
+      originalPrice: 550,
+      category: "OIL",
+      image: "/Product%20Image/Groundnut%20Oil%20Mockup-06.png",
+      hoverImage: null,
+      stock: 100,
+      rating: 4.8,
+      reviewsCount: 42,
+      isFeatured: true,
+      bannerLine: "Authentic Wood-Pressed Groundnut Oil, 100% Pure & Natural.",
+      ingredients: "100% Wood-Pressed Groundnut Seeds"
+    },
+    {
+      name: "Wood-Pressed Coconut Oil",
+      slug: "wood-pressed-coconut-oil",
+      description: "Wood-pressed raw coconut oil, cold-pressed from selected fresh coconuts. Ideal for cooking, hair, and skin care. 100% pure, natural, and preservative-free.",
+      price: 380,
+      originalPrice: 450,
+      category: "OIL",
+      image: "/Product%20Image/Groundnut%20Oil%20Mockup-06.png",
+      hoverImage: null,
+      stock: 80,
+      rating: 4.7,
+      reviewsCount: 15,
+      isFeatured: true,
+      bannerLine: "100% Pure Wood-Pressed Coconut Oil.",
+      ingredients: "100% Pure Dried Coconut Copra"
     }
   ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { logLoginToSheet } from "@/lib/sheets";
 
 export interface User {
   id: string;
@@ -30,15 +31,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);
-      } else {
-        setUser(null);
+        setLoading(false);
+        return;
       }
     } catch (err) {
-      console.error("Failed checking user session:", err);
-      setUser(null);
-    } finally {
-      setLoading(false);
+      console.warn("API check session failed, falling back to LocalStorage:", err);
     }
+
+    // LocalStorage fallback
+    const savedUser = localStorage.getItem("zerothi_user");
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -56,13 +67,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (res.ok) {
         setUser(data.user);
+        localStorage.setItem("zerothi_user", JSON.stringify(data.user));
+        logLoginToSheet(data.user.name, data.user.email, "Email Login");
         return { success: true };
       } else {
         return { success: false, error: data.error || "Login failed" };
       }
     } catch (err) {
-      return { success: false, error: "An unexpected error occurred" };
+      console.warn("API login failed, falling back to LocalStorage:", err);
     }
+
+    // Local storage mock login fallback
+    const mockUser = {
+      id: "user-" + Date.now(),
+      name: email.split("@")[0],
+      email: email,
+      role: (email.toLowerCase().includes("admin") || email.toLowerCase() === "it@zerothi.com") ? "ADMIN" : "CUSTOMER"
+    };
+    localStorage.setItem("zerothi_user", JSON.stringify(mockUser));
+    setUser(mockUser);
+    logLoginToSheet(mockUser.name, mockUser.email, "Local Email Login");
+    return { success: true };
   };
 
   const register = async (name: string, email: string, password: string) => {
@@ -76,22 +101,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (res.ok) {
         setUser(data.user);
+        localStorage.setItem("zerothi_user", JSON.stringify(data.user));
+        logLoginToSheet(data.user.name, data.user.email, "Email Registration");
         return { success: true };
       } else {
         return { success: false, error: data.error || "Registration failed" };
       }
     } catch (err) {
-      return { success: false, error: "An unexpected error occurred" };
+      console.warn("API register failed, falling back to LocalStorage:", err);
     }
+
+    // Local storage mock register fallback
+    const mockUser = {
+      id: "user-" + Date.now(),
+      name,
+      email,
+      role: (email.toLowerCase().includes("admin") || email.toLowerCase() === "it@zerothi.com") ? "ADMIN" : "CUSTOMER"
+    };
+    localStorage.setItem("zerothi_user", JSON.stringify(mockUser));
+    setUser(mockUser);
+    logLoginToSheet(mockUser.name, mockUser.email, "Local Email Registration");
+    return { success: true };
   };
 
   const logout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      setUser(null);
     } catch (err) {
-      console.error("Failed to logout:", err);
+      console.warn("API logout failed:", err);
     }
+    localStorage.removeItem("zerothi_user");
+    setUser(null);
   };
 
   return (

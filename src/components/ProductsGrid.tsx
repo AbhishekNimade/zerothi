@@ -6,6 +6,7 @@ import { useLikes } from "@/context/LikesContext";
 import ProductCard from "@/components/ProductCard";
 import { Search, Heart, SlidersHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { isSheetsConfigured, fetchProductsFromSheet } from "@/lib/sheets";
 
 interface Product {
   id: string;
@@ -20,6 +21,8 @@ interface Product {
   stock: number;
   rating: number;
   bannerLine: string | null;
+  status?: string;
+  sku?: string;
 }
 
 interface ProductsGridProps {
@@ -30,10 +33,91 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
   const searchParams = useSearchParams();
   const { likedIds } = useLikes();
 
+  const [displayProducts, setDisplayProducts] = useState<Product[]>(products);
   const [activeCategory, setActiveCategory] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("POPULARITY");
   const [showLikedOnly, setShowLikedOnly] = useState(false);
+
+  // Sync edits from Google Sheets or localStorage fallback
+  useEffect(() => {
+    async function loadDynamicProducts() {
+      try {
+        let merged: Product[] = [];
+        let sheetProducts = null;
+
+        if (isSheetsConfigured()) {
+          sheetProducts = await fetchProductsFromSheet();
+        }
+
+        if (sheetProducts && sheetProducts.length > 0) {
+          merged = sheetProducts.map((sp: any) => {
+            const matched = products.find(p => p.slug === sp.slug || p.id === sp.id.toString());
+            return {
+              id: sp.id?.toString() || matched?.id || sp.slug,
+              name: sp.name || matched?.name || "",
+              slug: sp.slug,
+              description: matched?.description || "Premium regional purity from Nimar.",
+              price: Number(sp.price),
+              originalPrice: Number(sp.originalPrice) || Math.round(Number(sp.price) * 1.2),
+              category: sp.category || matched?.category || "BANANA_CHIPS",
+              image: matched?.image || "/placeholder.png",
+              hoverImage: matched?.hoverImage || null,
+              stock: Number(sp.stock),
+              rating: Number(sp.rating) || matched?.rating || 4.8,
+              bannerLine: matched?.bannerLine || null,
+              status: sp.status || "ACTIVE",
+              sku: sp.sku || ""
+            };
+          });
+
+          // Sync to localStorage
+          localStorage.setItem("zerothi_products", JSON.stringify(merged));
+        } else {
+          // Fall back to localStorage
+          const localProductsStr = localStorage.getItem("zerothi_products");
+          if (localProductsStr) {
+            const localProducts = JSON.parse(localProductsStr);
+            merged = localProducts.map((lp: any) => {
+              const matched = products.find(p => p.slug === lp.slug);
+              return {
+                id: lp.id || matched?.id || lp.slug,
+                name: lp.name || matched?.name || "",
+                slug: lp.slug,
+                description: matched?.description || lp.description || "Premium regional purity from Nimar.",
+                price: Number(lp.price),
+                originalPrice: Number(lp.originalPrice) || matched?.originalPrice || Math.round(lp.price * 1.2),
+                category: lp.category || matched?.category || "BANANA_CHIPS",
+                image: lp.image || matched?.image || "/placeholder.png",
+                hoverImage: matched?.hoverImage || null,
+                stock: Number(lp.stock),
+                rating: Number(lp.rating) || matched?.rating || 4.8,
+                bannerLine: matched?.bannerLine || lp.bannerLine || null,
+                status: lp.status || "ACTIVE",
+                sku: lp.sku || ""
+              };
+            });
+          } else {
+            merged = products;
+          }
+        }
+
+        // Append any build-time products missing from list
+        products.forEach(p => {
+          if (!merged.some((m: any) => m.slug === p.slug)) {
+            merged.push(p);
+          }
+        });
+
+        setDisplayProducts(merged);
+      } catch (e) {
+        console.error("Failed to parse custom dynamic products:", e);
+        setDisplayProducts(products);
+      }
+    }
+
+    loadDynamicProducts();
+  }, [products]);
 
   // If searchParam contains ?filter=liked, pre-select liked items
   useEffect(() => {
@@ -45,16 +129,21 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
   }, [searchParams]);
 
   // Extract unique categories
-  const categories = ["ALL", "BANANA_CHIPS"];
+  const categories = ["ALL", "BANANA_CHIPS", "COW_GHEE", "OIL"];
 
   const formatCategoryName = (cat: string) => {
     if (cat === "ALL") return "All Products";
     if (cat === "BANANA_CHIPS") return "Banana Chips";
+    if (cat === "COW_GHEE") return "Pure Ghee";
+    if (cat === "OIL") return "Wood-Pressed Oil";
     return cat;
   };
 
   // Filter products
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = displayProducts.filter((product) => {
+    // Hide inactive products
+    const activeMatch = product.status !== "INACTIVE";
+
     // Category match
     const categoryMatch = activeCategory === "ALL" || product.category === activeCategory;
     
@@ -65,7 +154,7 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
     // Liked match
     const likedMatch = !showLikedOnly || likedIds.includes(product.id);
 
-    return categoryMatch && searchMatch && likedMatch;
+    return activeMatch && categoryMatch && searchMatch && likedMatch;
   });
 
   // Sort products
