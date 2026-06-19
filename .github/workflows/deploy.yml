@@ -23,7 +23,7 @@ jobs:
 
       # Step 3: Install all packages/dependencies
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       # Step 4: Run static export build (Generates the 'out' folder)
       - name: Build and Export Static Site
