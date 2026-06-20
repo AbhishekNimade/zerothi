@@ -68,10 +68,10 @@ export default function AboutPage() {
           </div>
           <h1 className="font-cinzel text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 md:gap-x-6">
             <span>The</span> 
-            <span className="relative inline-block w-[140px] sm:w-[180px] md:w-[260px] h-[40px] sm:h-[55px] md:h-[75px] align-middle">
+            <span className="relative inline-block w-[40px] sm:w-[55px] md:w-[75px] h-[40px] sm:h-[55px] md:h-[75px] align-middle hover:scale-110 transition-transform duration-300">
               <Image 
-                src="/Logo%20Zerothi/Medium%20Logo%20Zerothi-04.png" 
-                alt="Zerothi" 
+                src="/Logo%20Zerothi/Leaf%20logo.png" 
+                alt="Zerothi Leaf" 
                 fill 
                 className="object-contain" 
                 priority
