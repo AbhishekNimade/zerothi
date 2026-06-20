@@ -214,7 +214,7 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
       </div>
 
       {/* Category Tabs */}
-      <div className="flex flex-wrap gap-2 justify-center border-b border-white/5 pb-6">
+      <div className="flex overflow-x-auto whitespace-nowrap gap-2 md:justify-center border-b border-white/5 pb-6 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -225,7 +225,7 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
                 setShowLikedOnly(false);
               }
             }}
-            className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
+            className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer flex-shrink-0 ${
               activeCategory === cat 
                 ? "bg-gold-500 text-black shadow-[0_0_20px_rgba(212,175,55,0.2)]" 
                 : "bg-white/5 border border-white/5 text-white/60 hover:text-white hover:bg-white/10"

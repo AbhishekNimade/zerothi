@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import { LikesProvider } from "@/context/LikesContext";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import LenisProvider from "@/components/LenisProvider";
 
 export const metadata: Metadata = {
   title: "ZEROTHI | The Taste of Nimar",
@@ -39,8 +40,10 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             <LikesProvider>
-              {children}
-              <WhatsAppButton />
+              <LenisProvider>
+                {children}
+                <WhatsAppButton />
+              </LenisProvider>
             </LikesProvider>
           </CartProvider>
         </AuthProvider>

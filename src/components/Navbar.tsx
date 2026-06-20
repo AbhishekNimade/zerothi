@@ -130,8 +130,23 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Mobile menu button (Hamburger) - ONLY hamburger icon appears here */}
-            <div className="flex items-center md:hidden">
+            {/* Mobile Actions: Cart & Hamburger */}
+            <div className="flex items-center md:hidden gap-3">
+              {/* Mobile Shopping Bag */}
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer p-2"
+                aria-label="Open Cart"
+              >
+                <ShoppingBag className="w-5 h-5" />
+                {cartCount > 0 && (
+                  <span className="absolute top-1 right-1 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Hamburger Toggle */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors cursor-pointer p-2"
