@@ -27,6 +27,8 @@ jobs:
 
       # Step 4: Run static export build (Generates the 'out' folder)
       - name: Build and Export Static Site
+        env:
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: "286620839561-tbcs6ap3fevtqiie9g12spvfmap6jn6e.apps.googleusercontent.com"
         run: npm run build:static
 
       # Step 5: Sync the 'out' directory to Hostinger via FTP

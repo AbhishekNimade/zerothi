@@ -30,9 +30,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch("/api/auth/me");
       if (res.ok) {
         const data = await res.json();
-        setUser(data.user);
-        setLoading(false);
-        return;
+        if (data.user) {
+          setUser(data.user);
+          setLoading(false);
+          return;
+        }
       }
     } catch (err) {
       console.warn("API check session failed, falling back to LocalStorage:", err);

@@ -73,7 +73,7 @@ async function requestSheetsAPI(action: string, payload: any = {}): Promise<any>
       // For POST request, send as stringified JSON
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({
           action,
           ...payload

@@ -7,6 +7,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { ArrowRight, Lock, Mail, User, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { logLoginToSheet } from "@/lib/sheets";
 
 function SignupForm() {
   const { register, checkUserSession } = useAuth();
@@ -27,21 +28,53 @@ function SignupForm() {
     setIsGoogleSubmitting(true);
     setError("");
     try {
-      const res = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credential: response.credential }),
-      });
+      // 1. Try backend API login first (sets local session cookie)
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({ credential: response.credential }),
+        });
 
-      const data = await res.json();
-      if (res.ok) {
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem("zerothi_user", JSON.stringify(data.user));
+          logLoginToSheet(data.user.name, data.user.email, "Google Signup");
+          await checkUserSession();
+          router.push(redirect);
+          router.refresh();
+          return;
+        }
+      } catch (apiErr) {
+        console.warn("API Google login endpoint failed, falling back to client-side decoding:", apiErr);
+      }
+
+      // 2. Client-side decoding fallback (runs on static hosting without API backend)
+      const token = response.credential;
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const payload = JSON.parse(jsonPayload);
+
+      if (payload && payload.email) {
+        const mockUser = {
+          id: payload.sub || "user-" + Date.now(),
+          name: payload.name || "Google User",
+          email: payload.email,
+          role: (payload.email.toLowerCase().includes("admin") || payload.email.toLowerCase() === "it@zerothi.com") ? "ADMIN" : "CUSTOMER"
+        };
+        localStorage.setItem("zerothi_user", JSON.stringify(mockUser));
+        logLoginToSheet(mockUser.name, mockUser.email, "Google Signup (Client-Side)");
         await checkUserSession();
         router.push(redirect);
         router.refresh();
       } else {
-        setError(data.error || "Google Sign-In failed.");
+        setError("Google Sign-In failed to load profile data.");
       }
     } catch (err) {
+      console.error("An unexpected error occurred during Google Sign-In:", err);
       setError("An unexpected error occurred during Google Sign-In.");
     } finally {
       setIsGoogleSubmitting(false);
@@ -55,7 +88,7 @@ function SignupForm() {
       const gWindow = window as any;
       if (gWindow.google) {
         gWindow.google.accounts.id.initialize({
-          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1041170701048-placeholder-client-id.apps.googleusercontent.com",
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "286620839561-tbcs6ap3fevtqiie9g12spvfmap6jn6e.apps.googleusercontent.com",
           callback: handleGoogleLogin,
         });
         

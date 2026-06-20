@@ -26,6 +26,28 @@ function LoginForm() {
     setIsGoogleSubmitting(true);
     setError("");
     try {
+      // 1. Try backend API login first (sets local session cookie)
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({ credential: response.credential }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem("zerothi_user", JSON.stringify(data.user));
+          logLoginToSheet(data.user.name, data.user.email, "Google Login");
+          await checkUserSession();
+          router.push(redirect);
+          router.refresh();
+          return;
+        }
+      } catch (apiErr) {
+        console.warn("API Google login endpoint failed, falling back to client-side decoding:", apiErr);
+      }
+
+      // 2. Client-side decoding fallback (runs on static hosting without API backend)
       const token = response.credential;
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -42,7 +64,7 @@ function LoginForm() {
           role: (payload.email.toLowerCase().includes("admin") || payload.email.toLowerCase() === "it@zerothi.com") ? "ADMIN" : "CUSTOMER"
         };
         localStorage.setItem("zerothi_user", JSON.stringify(mockUser));
-        logLoginToSheet(mockUser.name, mockUser.email, "Google Login");
+        logLoginToSheet(mockUser.name, mockUser.email, "Google Login (Client-Side)");
         await checkUserSession();
         router.push(redirect);
         router.refresh();
@@ -50,7 +72,7 @@ function LoginForm() {
         setError("Google Sign-In failed to load profile data.");
       }
     } catch (err) {
-      console.warn("API Google login failed, falling back to client-side decoding:", err);
+      console.error("An unexpected error occurred during Google Sign-In:", err);
       setError("An unexpected error occurred during Google Sign-In.");
     } finally {
       setIsGoogleSubmitting(false);
@@ -64,7 +86,7 @@ function LoginForm() {
       const gWindow = window as any;
       if (gWindow.google) {
         gWindow.google.accounts.id.initialize({
-          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1041170701048-placeholder-client-id.apps.googleusercontent.com",
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "286620839561-tbcs6ap3fevtqiie9g12spvfmap6jn6e.apps.googleusercontent.com",
           callback: handleGoogleLogin,
         });
         

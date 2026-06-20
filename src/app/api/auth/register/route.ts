@@ -28,13 +28,14 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await hashPassword(password);
 
+    const role = (email.toLowerCase().includes("admin") || email.toLowerCase() === "it@zerothi.com") ? "ADMIN" : "CUSTOMER";
     // Create user
     const user = await db.user.create({
       data: {
         name,
         email: email.toLowerCase(),
         password: hashedPassword,
-        role: "CUSTOMER", // Default role
+        role,
       },
     });
 

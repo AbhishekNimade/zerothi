@@ -35,10 +35,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const targetRole = (email.toLowerCase().includes("admin") || email.toLowerCase() === "it@zerothi.com") ? "ADMIN" : "CUSTOMER";
+
     // Check if user already exists
     let user = await db.user.findUnique({
       where: { email: email.toLowerCase() },
     });
+
+    if (user && user.role !== targetRole) {
+      user = await db.user.update({
+        where: { id: user.id },
+        data: { role: targetRole }
+      });
+    }
 
     // If user does not exist, automatically register them
     if (!user) {
@@ -51,7 +60,7 @@ export async function POST(req: NextRequest) {
           name: name || "Google User",
           email: email.toLowerCase(),
           password: hashedPassword,
-          role: "CUSTOMER",
+          role: targetRole,
         },
       });
     }
