@@ -62,7 +62,8 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
           setLocalProduct(prev => ({
             ...prev,
             price: Number(matched.price),
-            stock: Number(matched.stock)
+            stock: Number(matched.stock),
+            image: matched.image || prev.image
           }));
         }
       } catch (e) {

@@ -203,7 +203,8 @@ function doPost(e) {
         Number(postData.originalPrice || 0),
         Number(postData.stock || 0),
         Number(postData.rating || 4.8),
-        postData.status || "ACTIVE"
+        postData.status || "ACTIVE",
+        postData.image || ""
       ]);
       return jsonResponse({ success: true, id: nextId.toString() });
     }
@@ -238,6 +239,7 @@ function doPost(e) {
           if (postData.stock !== undefined) prodSheet.getRange(i + 1, 8).setValue(Number(postData.stock));
           if (postData.rating !== undefined) prodSheet.getRange(i + 1, 9).setValue(Number(postData.rating));
           if (postData.status !== undefined) prodSheet.getRange(i + 1, 10).setValue(postData.status);
+          if (postData.image !== undefined) prodSheet.getRange(i + 1, 11).setValue(postData.image);
           return jsonResponse({ success: true });
         }
       }
@@ -255,14 +257,14 @@ function getOrCreateSheet(spreadsheet, name) {
   if (!sheet) {
     sheet = spreadsheet.insertSheet(name);
     if (name === "Products") {
-      sheet.appendRow(["id", "sku", "name", "slug", "category", "price", "originalPrice", "stock", "rating", "status"]);
-      sheet.appendRow(["1", "CHIPS-SALT-200", "Salted Banana Chips", "salted-banana-chips", "BANANA_CHIPS", 80, 100, 250, 4.8, "ACTIVE"]);
-      sheet.appendRow(["2", "CHIPS-TOM-200", "Tomato Banana Chips", "tomato-banana-chips", "BANANA_CHIPS", 90, 110, 200, 4.7, "ACTIVE"]);
-      sheet.appendRow(["3", "CHIPS-PERI-200", "Peri-Peri Banana Chips", "peri-peri-banana-chips", "BANANA_CHIPS", 95, 120, 150, 4.9, "ACTIVE"]);
-      sheet.appendRow(["4", "CHIPS-PUD-200", "Pudina Banana Chips", "pudina-banana-chips", "BANANA_CHIPS", 85, 105, 180, 4.6, "ACTIVE"]);
-      sheet.appendRow(["5", "GHEE-COW-500", "Pure Cow Ghee", "pure-cow-ghee", "COW_GHEE", 1100, 1300, 150, 4.9, "ACTIVE"]);
-      sheet.appendRow(["6", "OIL-GND-1L", "Wood-Pressed Groundnut Oil", "wood-pressed-groundnut-oil", "OIL", 450, 550, 100, 4.8, "ACTIVE"]);
-      sheet.appendRow(["7", "OIL-COC-1L", "Wood-Pressed Coconut Oil", "wood-pressed-coconut-oil", "OIL", 380, 450, 80, 4.7, "ACTIVE"]);
+      sheet.appendRow(["id", "sku", "name", "slug", "category", "price", "originalPrice", "stock", "rating", "status", "image"]);
+      sheet.appendRow(["1", "CHIPS-SALT-200", "Salted Banana Chips", "salted-banana-chips", "BANANA_CHIPS", 80, 100, 250, 4.8, "ACTIVE", "/Product Image/Salted Banana Mockup-01.png"]);
+      sheet.appendRow(["2", "CHIPS-TOM-200", "Tomato Banana Chips", "tomato-banana-chips", "BANANA_CHIPS", 90, 110, 200, 4.7, "ACTIVE", "/Product Image/Tomato Banana Mockup-02.png"]);
+      sheet.appendRow(["3", "CHIPS-PERI-200", "Peri-Peri Banana Chips", "peri-peri-banana-chips", "BANANA_CHIPS", 95, 120, 150, 4.9, "ACTIVE", "/Product Image/Peri-Peri Banana Mockup-03.png"]);
+      sheet.appendRow(["4", "CHIPS-PUD-200", "Pudina Banana Chips", "pudina-banana-chips", "BANANA_CHIPS", 85, 105, 180, 4.6, "ACTIVE", "/Product Image/Pudina Banana Mockup-04.png"]);
+      sheet.appendRow(["5", "GHEE-COW-500", "Pure Cow Ghee", "pure-cow-ghee", "COW_GHEE", 1100, 1300, 150, 4.9, "ACTIVE", "/Product Image/Cow Ghee Mockup-05.png"]);
+      sheet.appendRow(["6", "OIL-GND-1L", "Wood-Pressed Groundnut Oil", "wood-pressed-groundnut-oil", "OIL", 450, 550, 100, 4.8, "ACTIVE", "/Product Image/Groundnut Oil Mockup-06.png"]);
+      sheet.appendRow(["7", "OIL-COC-1L", "Wood-Pressed Coconut Oil", "wood-pressed-coconut-oil", "OIL", 380, 450, 80, 4.7, "ACTIVE", "/Product Image/Groundnut Oil Mockup-06.png"]);
     }
   }
   return sheet;

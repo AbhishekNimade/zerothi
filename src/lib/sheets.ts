@@ -12,6 +12,7 @@ export interface SheetProduct {
   stock: number;
   rating: number;
   status: string; // "ACTIVE" or "INACTIVE"
+  image?: string;
 }
 
 export interface SheetOrder {
@@ -172,6 +173,7 @@ export async function updateProductInSheet(
     originalPrice?: number;
     stock?: number;
     status?: string;
+    image?: string;
   }
 ): Promise<boolean> {
   if (!isSheetsConfigured()) return false;
@@ -189,6 +191,7 @@ export async function addProductToSheet(product: {
   originalPrice: number;
   stock: number;
   status: string;
+  image?: string;
 }): Promise<boolean> {
   if (!isSheetsConfigured()) return false;
   const res = await requestSheetsAPI("addProduct", product);

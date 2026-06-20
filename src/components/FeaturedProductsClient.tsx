@@ -46,7 +46,7 @@ export default function FeaturedProductsClient({ initialProducts }: { initialPro
               price: Number(sp.price),
               originalPrice: Number(sp.originalPrice) || Math.round(Number(sp.price) * 1.2),
               category: sp.category || matched?.category || "BANANA_CHIPS",
-              image: matched?.image || "/placeholder.png",
+              image: sp.image || matched?.image || "/placeholder.png",
               hoverImage: matched?.hoverImage || null,
               stock: Number(sp.stock),
               rating: Number(sp.rating) || matched?.rating || 4.8,

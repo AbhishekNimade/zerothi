@@ -64,6 +64,7 @@ export default function AdminProductsPage() {
   const [addOriginalPrice, setAddOriginalPrice] = useState("");
   const [addStock, setAddStock] = useState("");
   const [addStatus, setAddStatus] = useState("ACTIVE");
+  const [addImage, setAddImage] = useState("");
   const [modalLoading, setModalLoading] = useState(false);
 
   // Form states for editing products
@@ -75,6 +76,7 @@ export default function AdminProductsPage() {
   const [editName, setEditName] = useState<string>("");
   const [editCategory, setEditCategory] = useState<string>("");
   const [editStatus, setEditStatus] = useState<string>("");
+  const [editImage, setEditImage] = useState<string>("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
@@ -101,7 +103,7 @@ export default function AdminProductsPage() {
               price: Number(sp.price),
               originalPrice: Number(sp.originalPrice) || Math.round(Number(sp.price) * 1.2),
               stock: Number(sp.stock),
-              image: matched?.image || "/placeholder.png",
+              image: sp.image || matched?.image || "/placeholder.png",
               status: sp.status || "ACTIVE"
             };
           });
@@ -159,7 +161,8 @@ export default function AdminProductsPage() {
       price: parseFloat(addPrice),
       originalPrice: parseFloat(addOriginalPrice || addPrice),
       stock: parseInt(addStock),
-      status: addStatus
+      status: addStatus,
+      image: addImage || "/placeholder.png"
     };
 
     // Google Sheets Sync
@@ -177,8 +180,7 @@ export default function AdminProductsPage() {
       const localList = localProductsStr ? JSON.parse(localProductsStr) : [...DEFAULT_PRODUCTS];
       const newlyAdded = {
         id: (localList.length + 1).toString(),
-        ...nextProd,
-        image: "/placeholder.png"
+        ...nextProd
       };
       localList.push(newlyAdded);
       localStorage.setItem("zerothi_products", JSON.stringify(localList));
@@ -195,6 +197,7 @@ export default function AdminProductsPage() {
     setAddOriginalPrice("");
     setAddStock("");
     setAddStatus("ACTIVE");
+    setAddImage("");
     loadProducts();
   };
 
@@ -240,7 +243,8 @@ export default function AdminProductsPage() {
       price: priceVal,
       originalPrice: originalPriceVal,
       stock: stockVal,
-      status: editStatus
+      status: editStatus,
+      image: editImage || "/placeholder.png"
     };
 
     // Google Sheets Sync
@@ -286,6 +290,46 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleToggleStatus = async (p: Product) => {
+    setActionLoading(p.id);
+    const nextStatus = p.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+    const updateFields = { status: nextStatus };
+
+    // Google Sheets Sync
+    if (isSheetsConfigured()) {
+      try {
+        await updateProductInSheet(p.id, updateFields);
+      } catch (err) {
+        console.error("Sheets status toggle failed:", err);
+      }
+    }
+
+    // LocalStorage Sync
+    try {
+      const localProductsStr = localStorage.getItem("zerothi_products");
+      if (localProductsStr) {
+        const localProducts = JSON.parse(localProductsStr);
+        const updated = localProducts.map((lp: any) => {
+          if (lp.id === p.id || lp.id === p.id.toString()) {
+            return { ...lp, ...updateFields };
+          }
+          return lp;
+        });
+        localStorage.setItem("zerothi_products", JSON.stringify(updated));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    // Local state sync
+    setProducts((prev) =>
+      prev.map((item) =>
+        item.id === p.id ? { ...item, ...updateFields } : item
+      )
+    );
+    setActionLoading(null);
+  };
+
   const startEditing = (p: Product) => {
     setEditingProductId(p.id);
     setEditPrice(p.price.toString());
@@ -295,6 +339,7 @@ export default function AdminProductsPage() {
     setEditName(p.name);
     setEditCategory(p.category);
     setEditStatus(p.status || "ACTIVE");
+    setEditImage(p.image || "");
   };
 
   // Filter products list
@@ -476,18 +521,78 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
 
+                      {/* Photo management edit block */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 border-t border-white/5 pt-2">
+                        <div className="space-y-1">
+                          <label className="text-[8px] text-white/40 uppercase font-bold tracking-wider block">Product Photo</label>
+                          <div className="flex gap-2 items-center">
+                            <div className="w-10 h-10 bg-neutral-905 rounded border border-white/10 overflow-hidden relative flex-shrink-0 flex items-center justify-center bg-zinc-950">
+                              <img src={editImage || "/placeholder.png"} alt="Preview" className="object-contain p-1 w-full h-full" />
+                            </div>
+                            <input 
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => {
+                                    setEditImage(reader.result as string);
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                              className="hidden"
+                              id={`edit-image-file-${p.id}`}
+                            />
+                            <label 
+                              htmlFor={`edit-image-file-${p.id}`}
+                              className="px-2 py-1 bg-white/10 hover:bg-white/15 text-white text-[10px] font-bold uppercase rounded cursor-pointer transition-colors border border-white/5"
+                            >
+                              Upload
+                            </label>
+                            {editImage && (
+                              <button
+                                type="button"
+                                onClick={() => setEditImage("")}
+                                className="px-2 py-1 bg-red-500/10 hover:bg-red-500/15 text-red-400 text-[10px] font-bold uppercase rounded transition-colors border border-red-500/10 cursor-pointer"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[8px] text-white/40 uppercase font-bold tracking-wider block">Image Path/URL</label>
+                          <input 
+                            type="text"
+                            value={editImage}
+                            onChange={(e) => setEditImage(e.target.value)}
+                            className="w-full bg-black border border-white/10 rounded px-2 py-1 text-white text-[10px] focus:outline-none focus:border-gold-500"
+                            placeholder="e.g. /Product Image/..."
+                          />
+                        </div>
+                      </div>
+
                       <div className="flex items-center justify-between border-t border-white/5 pt-2">
                         <span className="text-[9px] text-white/40 uppercase font-bold tracking-wider">Catalog Visibility</span>
                         <button
                           type="button"
                           onClick={() => setEditStatus(editStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE")}
-                          className="text-white focus:outline-none cursor-pointer flex items-center gap-1.5 hover:text-gold-400 transition-colors"
+                          className="relative flex items-center focus:outline-none cursor-pointer group h-5"
                         >
-                          {editStatus === "ACTIVE" ? (
-                            <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-bold"><ToggleRight className="w-5 h-5 text-emerald-400" /> ACTIVE (Live)</span>
-                          ) : (
-                            <span className="flex items-center gap-1 text-[10px] text-white/40 font-medium"><ToggleLeft className="w-5 h-5 text-white/30" /> INACTIVE (Hidden)</span>
-                          )}
+                          {/* Track */}
+                          <div className={`w-8 h-4.5 rounded-full transition-colors duration-300 ${
+                            editStatus === "INACTIVE" 
+                              ? "bg-white/10 group-hover:bg-white/15 border border-white/5" 
+                              : "bg-emerald-500/20 border border-emerald-500/40 group-hover:bg-emerald-500/35"
+                          }`} />
+                          {/* Knob */}
+                          <div className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full shadow-md transition-all duration-300 ${
+                            editStatus === "INACTIVE" 
+                              ? "translate-x-0 bg-white/40" 
+                              : "translate-x-3.5 bg-emerald-400"
+                          }`} />
                         </button>
                       </div>
                     </div>
@@ -496,9 +601,37 @@ export default function AdminProductsPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-[8px] font-bold text-gold-500 uppercase tracking-widest bg-gold-500/10 border border-gold-500/20 px-2 py-0.5 rounded">{p.category}</span>
                         <span className="text-white/30 text-[9px] font-mono">SKU: {p.sku || "N/A"}</span>
-                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded ml-auto ${p.status === "INACTIVE" ? "bg-red-500/10 border border-red-500/20 text-red-400" : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"}`}>
-                          {p.status || "ACTIVE"}
-                        </span>
+                        
+                        {/* Direct Professional Switch Toggle */}
+                        <div className="flex items-center gap-1.5 ml-auto">
+                          <span className={`text-[9px] font-bold uppercase tracking-wider transition-colors duration-200 ${p.status === "INACTIVE" ? "text-white/30" : "text-emerald-400"}`}>
+                            {p.status || "ACTIVE"}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleStatus(p)}
+                            disabled={actionLoading === p.id}
+                            className="relative flex items-center focus:outline-none cursor-pointer group h-5"
+                            aria-label="Toggle live status"
+                          >
+                            {/* Track */}
+                            <div className={`w-8 h-4.5 rounded-full transition-colors duration-300 ${
+                              p.status === "INACTIVE" 
+                                ? "bg-white/10 group-hover:bg-white/15 border border-white/5" 
+                                : "bg-emerald-500/20 border border-emerald-500/40 group-hover:bg-emerald-500/35"
+                            }`} />
+                            {/* Knob */}
+                            <div className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full shadow-md transition-all duration-300 flex items-center justify-center ${
+                              p.status === "INACTIVE" 
+                                ? "translate-x-0 bg-white/40" 
+                                : "translate-x-3.5 bg-emerald-400"
+                            }`}>
+                              {actionLoading === p.id && (
+                                <Loader2 className="w-2 h-2 text-black animate-spin" />
+                              )}
+                            </div>
+                          </button>
+                        </div>
                       </div>
                       <h4 className="text-white text-base font-semibold truncate leading-tight">{p.name}</h4>
                       
@@ -674,6 +807,70 @@ export default function AdminProductsPage() {
                       onChange={(e) => setAddStock(e.target.value)}
                       className="w-full bg-black border border-white/10 focus:border-gold-500 rounded-lg py-3 px-4 text-white focus:outline-none"
                       required
+                    />
+                  </div>
+                </div>
+
+                {/* Image upload and path options */}
+                <div className="space-y-3 p-4 bg-white/5 rounded-xl border border-white/5">
+                  <span className="text-[10px] font-bold text-gold-500 uppercase tracking-wider block">Product Photo / Image</span>
+                  
+                  <div className="flex gap-4 items-center">
+                    {/* Thumbnail preview */}
+                    <div className="w-16 h-16 bg-black rounded-lg border border-white/10 overflow-hidden relative flex-shrink-0 flex items-center justify-center">
+                      <img 
+                        src={addImage || "/placeholder.png"} 
+                        alt="Preview" 
+                        className="object-contain p-1 w-full h-full" 
+                      />
+                    </div>
+
+                    <div className="flex-1 space-y-2">
+                      <label className="text-[10px] font-semibold text-white/60">Upload Photo File</label>
+                      <div className="flex items-center gap-2">
+                        <input 
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setAddImage(reader.result as string);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="hidden"
+                          id="add-image-file"
+                        />
+                        <label 
+                          htmlFor="add-image-file"
+                          className="px-3 py-2 bg-white/10 hover:bg-white/15 text-white font-semibold text-[11px] rounded-lg cursor-pointer transition-colors border border-white/5"
+                        >
+                          Choose Photo File
+                        </label>
+                        {addImage && (
+                          <button
+                            type="button"
+                            onClick={() => setAddImage("")}
+                            className="px-3 py-2 bg-red-500/10 hover:bg-red-500/15 text-red-400 font-semibold text-[11px] rounded-lg transition-colors border border-red-500/10 cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[9px] text-white/40 uppercase font-bold tracking-wider">Or enter photo URL/path manually</label>
+                    <input 
+                      type="text"
+                      placeholder="e.g. /Product Image/Salted Banana Mockup-01.png"
+                      value={addImage}
+                      onChange={(e) => setAddImage(e.target.value)}
+                      className="w-full bg-black border border-white/10 focus:border-gold-500 rounded-lg py-2.5 px-3 text-white text-xs focus:outline-none"
                     />
                   </div>
                 </div>
