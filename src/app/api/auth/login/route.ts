@@ -13,9 +13,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Find user
-    let user = await db.user.findUnique({
-      where: { email: email.toLowerCase() },
+    // Find user by email or phone number
+    let user = await db.user.findFirst({
+      where: {
+        OR: [
+          { email: email.toLowerCase() },
+          { phone: email }
+        ]
+      },
     });
 
     if (!user) {
@@ -25,7 +30,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const targetRole = (email.toLowerCase().includes("admin") || email.toLowerCase() === "it@zerothi.com") ? "ADMIN" : "CUSTOMER";
+    const userEmail = user.email.toLowerCase();
+    const targetRole = (userEmail.includes("admin") || userEmail === "it@zerothi.com") ? "ADMIN" : "CUSTOMER";
     if (user.role !== targetRole) {
       user = await db.user.update({
         where: { id: user.id },
@@ -58,6 +64,7 @@ export async function POST(req: NextRequest) {
         id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         role: user.role,
       },
     });

@@ -9,6 +9,11 @@ import LenisProvider from "@/components/LenisProvider";
 export const metadata: Metadata = {
   title: "ZEROTHI | The Taste of Nimar",
   description: "Traditional purity from Nimad, empowering women and supporting farmers.",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

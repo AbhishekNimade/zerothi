@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import { useLikes } from "@/context/LikesContext";
 import { Heart, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -27,6 +28,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
   const { toggleLike, isLiked } = useLikes();
+  const router = useRouter();
   
   const liked = isLiked(product.id);
   const isOutOfStock = product.stock <= 0 && product.category !== "FUTURE";
@@ -48,11 +50,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Image Area */}
       <div className="aspect-square w-full bg-neutral-950 overflow-hidden relative border-b border-white/5">
         {/* Floating Badges */}
-        {discount > 0 && !isFuture && (
-          <div className="absolute top-4 left-4 z-10 bg-gold-500 text-black text-[10px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-wider">
-            {discount}% OFF
-          </div>
-        )}
         {isFuture && (
           <div className="absolute top-4 left-4 z-10 bg-white/15 text-white text-[10px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-wider backdrop-blur-sm border border-white/10">
             COMING SOON
@@ -133,13 +130,24 @@ export default function ProductCard({ product }: ProductCardProps) {
           ) : isOutOfStock ? (
             <span className="text-red-400/80 text-[10px] uppercase font-bold tracking-wider">Out of Stock</span>
           ) : (
-            <button 
-              onClick={() => addToCart(product)}
-              className="w-8 h-8 rounded-full bg-gold-500 hover:bg-gold-400 text-black flex items-center justify-center transition-colors focus:outline-none cursor-pointer"
-              title="Add to Cart"
-            >
-              <ShoppingBag className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => addToCart(product)}
+                className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white flex items-center justify-center transition-colors focus:outline-none cursor-pointer"
+                title="Add to Cart"
+              >
+                <ShoppingBag className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={() => {
+                  addToCart(product);
+                  router.push("/checkout");
+                }}
+                className="px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-wider rounded-full bg-gold-500 hover:bg-gold-400 text-black transition-colors focus:outline-none cursor-pointer flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+              >
+                Buy Now
+              </button>
+            </div>
           )}
         </div>
       </div>

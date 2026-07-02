@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 import { useLikes } from "@/context/LikesContext";
 import { Heart, ShoppingBag, Plus, Minus, ArrowLeft, Star, Leaf, Check } from "lucide-react";
 import Image from "next/image";
@@ -33,6 +34,7 @@ interface ProductDetailsClientProps {
 export default function ProductDetailsClient({ product, relatedProducts }: ProductDetailsClientProps) {
   const { addToCart } = useCart();
   const { toggleLike, isLiked } = useLikes();
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"desc" | "ingredients" | "nutritional">("desc");
 
@@ -156,6 +158,22 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
     } else {
       addToCart(localProduct, quantity);
     }
+  };
+
+  const handleBuyNow = () => {
+    if (hasSizes) {
+      const customProduct = {
+        ...localProduct,
+        id: `${localProduct.id}-${selectedSize}`,
+        name: `${localProduct.name} (${selectedSize})`,
+        price: currentPrice,
+        originalPrice: currentOriginalPrice
+      };
+      addToCart(customProduct, quantity);
+    } else {
+      addToCart(localProduct, quantity);
+    }
+    router.push("/checkout");
   };
 
   // Mocked details based on regional categories
@@ -296,9 +314,16 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
               {/* Action Buttons */}
               <button 
                 onClick={handleAddToCart}
-                className="flex-1 py-4 bg-gold-500 hover:bg-gold-400 text-black font-bold uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-2 rounded-lg cursor-pointer shadow-[0_0_30px_rgba(212,175,55,0.25)]"
+                className="flex-1 py-4 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-bold uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-2 rounded-lg cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4" /> Add To Cart
+              </button>
+
+              <button 
+                onClick={handleBuyNow}
+                className="flex-1 py-4 bg-gold-500 hover:bg-gold-400 text-black font-bold uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-2 rounded-lg cursor-pointer shadow-[0_0_30px_rgba(212,175,55,0.25)]"
+              >
+                Buy Now
               </button>
 
               <button 

@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-import { ArrowRight, Lock, Mail, User, Loader2 } from "lucide-react";
+import { ArrowRight, Lock, Mail, User, Loader2, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { logLoginToSheet } from "@/lib/sheets";
 
@@ -16,6 +16,7 @@ function SignupForm() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -128,7 +129,7 @@ function SignupForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !phone || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
@@ -142,7 +143,7 @@ function SignupForm() {
     setIsSubmitting(true);
 
     try {
-      const res = await register(name, email, password);
+      const res = await register(name, email, password, phone);
       if (res.success) {
         router.push(redirect);
         router.refresh();
@@ -222,6 +223,23 @@ function SignupForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-12 pr-4 text-white placeholder-white/20 text-sm focus:outline-none"
                   placeholder="name@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-white/80 text-xs font-semibold uppercase tracking-wider block">
+                Phone Number
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                <input 
+                  type="tel" 
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full bg-black/40 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-12 pr-4 text-white placeholder-white/20 text-sm focus:outline-none"
+                  placeholder="e.g., +91 98765 43210"
                   required
                 />
               </div>

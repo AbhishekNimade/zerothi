@@ -4,11 +4,11 @@ import { hashPassword, signToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, phone } = await req.json();
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone) {
       return NextResponse.json(
-        { error: "Missing required fields (name, email, password)" },
+        { error: "Missing required fields (name, email, password, phone)" },
         { status: 400 }
       );
     }
@@ -25,6 +25,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check if phone already exists
+    const existingPhoneUser = await db.user.findUnique({
+      where: { phone },
+    });
+
+    if (existingPhoneUser) {
+      return NextResponse.json(
+        { error: "User with this phone number already exists" },
+        { status: 400 }
+      );
+    }
+
     // Hash password
     const hashedPassword = await hashPassword(password);
 
@@ -34,6 +46,7 @@ export async function POST(req: NextRequest) {
       data: {
         name,
         email: email.toLowerCase(),
+        phone,
         password: hashedPassword,
         role,
       },
@@ -55,6 +68,7 @@ export async function POST(req: NextRequest) {
           id: user.id,
           name: user.name,
           email: user.email,
+          phone: user.phone,
           role: user.role,
         },
       },

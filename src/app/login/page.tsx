@@ -188,16 +188,16 @@ function LoginForm() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="text-white/80 text-xs font-semibold uppercase tracking-wider block">
-                Email Address
+                Email or Phone Number
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                 <input 
-                  type="email" 
+                  type="text" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-12 pr-4 text-white placeholder-white/20 text-sm focus:outline-none"
-                  placeholder="name@example.com"
+                  placeholder="name@example.com or +91..."
                   required
                 />
               </div>

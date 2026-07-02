@@ -155,7 +155,7 @@ export default async function Home() {
       {/* Brand Journey Teaser Banner */}
       <section className="py-28 relative z-10 bg-neutral-950 border-t border-white/5 overflow-hidden">
         {/* Background Image Overlay */}
-        <div className="absolute inset-0 opacity-15 bg-[url('https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center" />
+        <div className="absolute inset-0 bg-[url('/farmland-rising-sun.png')] bg-cover bg-center opacity-25" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <h2 className="font-cinzel text-3xl md:text-5xl text-white font-bold mb-6">More Than A Food Brand</h2>
           <p className="text-white/70 text-sm md:text-base leading-relaxed font-light mb-8 max-w-2xl mx-auto">
@@ -191,7 +191,7 @@ export default async function Home() {
               </div>
               <div>
                 <h4 className="text-white text-xs font-semibold">Rajesh Sharma</h4>
-                <p className="text-white/40 text-[10px] uppercase tracking-wider mt-0.5">Verified Buyer • Indore</p>
+                <p className="text-white/40 text-[10px] uppercase tracking-wider mt-0.5">Verified Buyer</p>
               </div>
             </div>
 
@@ -207,7 +207,7 @@ export default async function Home() {
               </div>
               <div>
                 <h4 className="text-white text-xs font-semibold">Priya Patidar</h4>
-                <p className="text-white/40 text-[10px] uppercase tracking-wider mt-0.5">Verified Buyer • Khargone</p>
+                <p className="text-white/40 text-[10px] uppercase tracking-wider mt-0.5">Verified Buyer</p>
               </div>
             </div>
 
@@ -223,7 +223,7 @@ export default async function Home() {
               </div>
               <div>
                 <h4 className="text-white text-xs font-semibold">Amit Chouhan</h4>
-                <p className="text-white/40 text-[10px] uppercase tracking-wider mt-0.5">Verified Buyer • Mumbai</p>
+                <p className="text-white/40 text-[10px] uppercase tracking-wider mt-0.5">Verified Buyer</p>
               </div>
             </div>
           </div>

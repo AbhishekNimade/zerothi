@@ -21,7 +21,7 @@ const TIMELINE_STEPS: TimelineStep[] = [
     subtitle: "Direct From Nimar Farms",
     description: "Our raw materials, including fresh Nimar bananas and dairy fats, are carefully selected directly from local farmers in Nimar, ensuring fair trade and absolute freshness.",
     icon: Tractor,
-    image: "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?q=80&w=600&auto=format&fit=crop"
+    image: "/yield-sourcing-bananas.png"
   },
   {
     title: "2. Precision Slicing",
