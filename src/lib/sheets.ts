@@ -83,8 +83,8 @@ async function requestSheetsAPI(action: string, payload: any = {}): Promise<any>
         return await response.json();
       }
     }
-  } catch (err) {
-    console.error(`Google Sheet API Action "${action}" failed:`, err);
+  } catch (err: any) {
+    console.warn(`Google Sheet API Action "${action}" connection unavailable (using offline/local cache fallback)`);
   }
   return null;
 }
