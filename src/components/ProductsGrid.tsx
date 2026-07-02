@@ -58,8 +58,8 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
               name: sp.name || matched?.name || "",
               slug: sp.slug,
               description: matched?.description || "Premium regional purity from Nimar.",
-              price: Number(sp.price),
-              originalPrice: Number(sp.originalPrice) || Math.round(Number(sp.price) * 1.2),
+              price: sp.category === "BANANA_CHIPS" ? 10 : Number(sp.price),
+              originalPrice: sp.category === "BANANA_CHIPS" ? 12 : (Number(sp.originalPrice) || Math.round(Number(sp.price) * 1.2)),
               category: sp.category || matched?.category || "BANANA_CHIPS",
               image: sp.image || matched?.image || "/placeholder.png",
               hoverImage: matched?.hoverImage || null,
@@ -70,7 +70,7 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
               sku: sp.sku || ""
             };
           });
-
+ 
           // Sync to localStorage
           localStorage.setItem("zerothi_products", JSON.stringify(merged));
         } else {
@@ -85,8 +85,8 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
                 name: lp.name || matched?.name || "",
                 slug: lp.slug,
                 description: matched?.description || lp.description || "Premium regional purity from Nimar.",
-                price: Number(lp.price),
-                originalPrice: Number(lp.originalPrice) || matched?.originalPrice || Math.round(lp.price * 1.2),
+                price: lp.category === "BANANA_CHIPS" ? 10 : Number(lp.price),
+                originalPrice: lp.category === "BANANA_CHIPS" ? 12 : (Number(lp.originalPrice) || matched?.originalPrice || Math.round(lp.price * 1.2)),
                 category: lp.category || matched?.category || "BANANA_CHIPS",
                 image: lp.image || matched?.image || "/placeholder.png",
                 hoverImage: matched?.hoverImage || null,
