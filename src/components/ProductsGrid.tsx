@@ -109,7 +109,9 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
           }
         });
 
-        setDisplayProducts(merged);
+        // Filter: Keep only ACTIVE products
+        const activeProducts = merged.filter((p: any) => p.status !== "INACTIVE");
+        setDisplayProducts(activeProducts);
       } catch (e) {
         console.error("Failed to parse custom dynamic products:", e);
         setDisplayProducts(products);
