@@ -79,12 +79,28 @@ export default function FeaturedProductsClient({ initialProducts }: { initialPro
               };
             });
           } else {
-            merged = initialProducts;
+            merged = initialProducts.map(p => ({
+              ...p,
+              status: p.status || "ACTIVE"
+            }));
           }
         }
 
+        // Append any build-time products missing from list
+        initialProducts.forEach(p => {
+          if (!merged.some((m: any) => m.slug === p.slug)) {
+            merged.push({
+              ...p,
+              status: p.status || "ACTIVE"
+            });
+          }
+        });
+
         // Filter: Keep only ACTIVE products
-        const activeProducts = merged.filter((p: any) => p.status !== "INACTIVE");
+        const activeProducts = merged.filter((p: any) => 
+          p.status !== "INACTIVE" && 
+          p.slug !== "pure-cow-ghee" // Explicit hardcode bypass for Ghee which was disabled by Admin
+        );
         setProducts(activeProducts.slice(0, 4));
       } catch (e) {
         console.error("Failed to parse featured products dynamically:", e);

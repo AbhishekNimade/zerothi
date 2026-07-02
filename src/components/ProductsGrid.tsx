@@ -105,12 +105,19 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
         // Append any build-time products missing from list
         products.forEach(p => {
           if (!merged.some((m: any) => m.slug === p.slug)) {
-            merged.push(p);
+            // Apply build-time fallback status logic
+            merged.push({
+              ...p,
+              status: p.status || "ACTIVE"
+            });
           }
         });
 
         // Filter: Keep only ACTIVE products
-        const activeProducts = merged.filter((p: any) => p.status !== "INACTIVE");
+        const activeProducts = merged.filter((p: any) => 
+          p.status !== "INACTIVE" && 
+          p.slug !== "pure-cow-ghee" // Explicit hardcode bypass for Ghee which was disabled by Admin
+        );
         setDisplayProducts(activeProducts);
       } catch (e) {
         console.error("Failed to parse custom dynamic products:", e);
