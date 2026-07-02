@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { useLikes } from "@/context/LikesContext";
+import { useAuth } from "@/context/AuthContext";
 import { Heart, ShoppingBag, Plus, Minus, ArrowLeft, Star, Leaf, Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
+import LoginModal from "@/components/LoginModal";
 import { isSheetsConfigured, fetchProductsFromSheet } from "@/lib/sheets";
 
 interface Product {
@@ -34,8 +36,31 @@ interface ProductDetailsClientProps {
 export default function ProductDetailsClient({ product, relatedProducts }: ProductDetailsClientProps) {
   const { addToCart } = useCart();
   const { toggleLike, isLiked } = useLikes();
+  const { user } = useAuth();
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
+
+  // Login modal
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [modalReason, setModalReason] = useState<"cart" | "like">("cart");
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+
+  const requireAuth = (reason: "cart" | "like", action: () => void) => {
+    if (!user) {
+      setModalReason(reason);
+      setPendingAction(() => action);
+      setShowLoginModal(true);
+    } else {
+      action();
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
+    }
+  };
   const [activeTab, setActiveTab] = useState<"desc" | "ingredients" | "nutritional">("desc");
 
   const [localProduct, setLocalProduct] = useState(product);
@@ -145,7 +170,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
     }
   };
 
-  const handleAddToCart = () => {
+  const doAddToCart = () => {
     if (hasSizes) {
       const customProduct = {
         ...localProduct,
@@ -160,21 +185,14 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
     }
   };
 
-  const handleBuyNow = () => {
-    if (hasSizes) {
-      const customProduct = {
-        ...localProduct,
-        id: `${localProduct.id}-${selectedSize}`,
-        name: `${localProduct.name} (${selectedSize})`,
-        price: currentPrice,
-        originalPrice: currentOriginalPrice
-      };
-      addToCart(customProduct, quantity);
-    } else {
-      addToCart(localProduct, quantity);
-    }
+  const doBuyNow = () => {
+    doAddToCart();
     router.push("/checkout");
   };
+
+  const handleAddToCart = () => requireAuth("cart", doAddToCart);
+  const handleBuyNow = () => requireAuth("cart", doBuyNow);
+  const handleLike = () => requireAuth("like", () => toggleLike(localProduct.id));
 
   // Mocked details based on regional categories
   const mockIngredients = product.category === "BANANA_CHIPS"
@@ -327,7 +345,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
               </button>
 
               <button 
-                onClick={() => toggleLike(product.id)}
+                onClick={handleLike}
                 className={`p-4 border rounded-lg flex items-center justify-center transition-colors cursor-pointer focus:outline-none ${
                   liked 
                     ? "bg-red-500/10 border-red-500/30 text-red-500" 
@@ -417,6 +435,14 @@ export default function ProductDetailsClient({ product, relatedProducts }: Produ
           </div>
         </section>
       )}
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
+        reason={modalReason}
+      />
     </div>
   );
 }
