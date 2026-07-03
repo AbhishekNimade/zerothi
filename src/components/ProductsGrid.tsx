@@ -222,27 +222,34 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
         </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className="flex overflow-x-auto whitespace-nowrap gap-2 md:justify-center border-b border-white/5 pb-6 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      {/* Category Tabs — horizontally scrollable on mobile */}
+      <div
+        data-lenis-prevent
+        style={{ touchAction: "pan-x" }}
+        className="flex overflow-x-auto whitespace-nowrap gap-2 md:justify-center border-b border-white/5 pb-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
+        {/* Left padding spacer so first item has breathing room */}
+        <span className="flex-shrink-0 w-4 md:hidden" aria-hidden />
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => {
               setActiveCategory(cat);
-              // reset liked filter if we switch categories and no items are liked to prevent empty page confusion
               if (showLikedOnly && likedIds.length === 0) {
                 setShowLikedOnly(false);
               }
             }}
             className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer flex-shrink-0 ${
-              activeCategory === cat 
-                ? "bg-gold-500 text-black shadow-[0_0_20px_rgba(212,175,55,0.2)]" 
+              activeCategory === cat
+                ? "bg-gold-500 text-black shadow-[0_0_20px_rgba(212,175,55,0.2)]"
                 : "bg-white/5 border border-white/5 text-white/60 hover:text-white hover:bg-white/10"
             }`}
           >
             {formatCategoryName(cat)}
           </button>
         ))}
+        {/* Right padding spacer so last item never gets cut off */}
+        <span className="flex-shrink-0 w-4 md:hidden" aria-hidden />
       </div>
 
       {/* Products Grid list */}
