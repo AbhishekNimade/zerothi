@@ -140,7 +140,7 @@ export default function ProductCard({ product, minimal = false }: ProductCardPro
               src={product.image}
               alt={product.name}
               fill
-              className={`object-contain p-4 sm:p-5 transition-transform duration-700 ease-out group-hover:scale-105 ${
+              className={`object-contain p-4 sm:p-5 transition-all duration-500 ease-out group-hover:scale-108 group-hover:-rotate-3 group-hover:-translate-x-1 ${
                 product.hoverImage ? "group-hover:opacity-0" : ""
               }`}
             />
@@ -149,7 +149,7 @@ export default function ProductCard({ product, minimal = false }: ProductCardPro
                 src={product.hoverImage}
                 alt={`${product.name} alternate`}
                 fill
-                className="object-contain p-4 sm:p-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"
+                className="object-contain p-4 sm:p-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out group-hover:scale-108 group-hover:rotate-3 group-hover:translate-x-1"
               />
             )}
           </Link>

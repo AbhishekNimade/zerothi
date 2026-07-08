@@ -4,6 +4,7 @@ import FeaturedProductsClient from "@/components/FeaturedProductsClient";
 import CoreValues from "@/components/CoreValues";
 import HomeVisuals from "@/components/HomeVisuals";
 import PersonalizedBanner from "@/components/PersonalizedBanner";
+import StatsCounter from "@/components/StatsCounter";
 import { ArrowRight, Leaf, ShieldCheck, HeartHandshake } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -253,6 +254,11 @@ export default async function Home() {
         </div>
 
         <FeaturedProductsClient initialProducts={featuredProducts} />
+      </section>
+
+      {/* Stats Counter Section (Dumb counting numbers animation) */}
+      <section className="relative z-10">
+        <StatsCounter />
       </section>
 
       {/* Brand Journey Teaser Banner */}
