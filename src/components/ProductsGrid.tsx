@@ -39,6 +39,31 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
   const [sortBy, setSortBy] = useState("POPULARITY");
   const [showLikedOnly, setShowLikedOnly] = useState(false);
 
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const searches = localStorage.getItem("zerothi_recent_searches");
+      if (searches) {
+        setRecentSearches(JSON.parse(searches));
+      }
+    } catch (e) {
+      console.error("Failed to load recent searches", e);
+    }
+  }, []);
+
+  const saveRecentSearch = (query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    setRecentSearches(prev => {
+      const filtered = prev.filter(s => s !== trimmed);
+      const next = [trimmed, ...filtered].slice(0, 5);
+      localStorage.setItem("zerothi_recent_searches", JSON.stringify(next));
+      return next;
+    });
+  };
+
   // Sync edits from Google Sheets or localStorage fallback
   useEffect(() => {
     async function loadDynamicProducts() {
@@ -185,9 +210,92 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
             type="text" 
             placeholder="Search items by name..." 
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-black/40 border border-white/10 focus:border-gold-500 transition-colors rounded-xl py-3 pl-12 pr-4 text-white placeholder-white/20 text-sm focus:outline-none"
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              if (e.target.value.trim().length > 2) {
+                saveRecentSearch(e.target.value);
+              }
+            }}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+            className="w-full bg-black/40 border border-white/10 focus:border-mustard-500 transition-colors rounded-xl py-3 pl-12 pr-4 text-white placeholder-white/20 text-sm focus:outline-none"
           />
+
+          {/* Smart Search Dropdown Overlay */}
+          {isSearchFocused && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-oatmeal-950 border border-white/10 rounded-xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-50 space-y-4">
+              {/* Recent Searches */}
+              {recentSearches.length > 0 && (
+                <div>
+                  <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest block mb-1.5">Recent Searches</span>
+                  <div className="flex flex-wrap gap-2">
+                    {recentSearches.map((s, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery(s);
+                          saveRecentSearch(s);
+                        }}
+                        className="px-2 py-1 bg-white/5 border border-white/5 hover:border-white/20 hover:text-white rounded-md text-[10px] text-white/70 transition-all cursor-pointer"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Popular Products */}
+              <div>
+                <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest block mb-1.5">Popular Items</span>
+                <div className="space-y-1.5 text-xs text-white/70">
+                  {[
+                    { name: "Masala Banana Chips", query: "Masala" },
+                    { name: "Pure Cow Ghee", query: "Ghee" },
+                    { name: "Wood-Pressed Groundnut Oil", query: "Groundnut" }
+                  ].map((p, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery(p.query);
+                        saveRecentSearch(p.query);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/5 hover:text-white transition-all flex items-center justify-between cursor-pointer"
+                    >
+                      <span>{p.name}</span>
+                      <span className="text-[8px] text-mustard-500 font-bold uppercase tracking-wider">🔥 Popular</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Category Shortcuts */}
+              <div>
+                <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest block mb-1.5">Category Shortcuts</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { label: "Banana Chips", code: "BANANA_CHIPS" },
+                    { label: "Cow Ghee", code: "COW_GHEE" },
+                    { label: "Organic Oils", code: "OIL" }
+                  ].map((cat) => (
+                    <button
+                      key={cat.code}
+                      type="button"
+                      onClick={() => {
+                        setActiveCategory(cat.code);
+                        setIsSearchFocused(false);
+                      }}
+                      className="py-2 bg-white/5 hover:bg-mustard-500/10 border border-white/5 hover:border-mustard-500/30 text-white/80 hover:text-mustard-450 rounded-lg text-[9px] text-center font-semibold uppercase tracking-wider transition-all cursor-pointer"
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sort & Liked Filters */}

@@ -20,7 +20,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed w-full z-40 top-0 transition-all duration-300 bg-black/85 backdrop-blur-md border-b border-white/5 selection:bg-gold-500/30">
+      <nav className="fixed w-full z-40 top-0 transition-all duration-500 bg-black/20 backdrop-blur-2xl border-b border-white/[0.06] selection:bg-gold-500/30" style={{ WebkitBackdropFilter: "blur(32px)", backdropFilter: "blur(32px)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
@@ -41,10 +41,11 @@ export default function Navbar() {
               
               {/* Desktop Navigation Links */}
               <div className="hidden md:flex items-center space-x-8 max-md:!hidden">
-                <Link href="/" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Home</Link>
-                <Link href="/about" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Our Story</Link>
-                <Link href="/products" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Shop</Link>
-                <Link href="/contact" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Contact</Link>
+                 <Link href="/" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Home</Link>
+                 <Link href="/about" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Our Story</Link>
+                 <Link href="/products" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Shop</Link>
+                 <Link href="/hamper" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Custom Hamper</Link>
+                 <Link href="/contact" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Contact</Link>
               </div>
 
               {/* Icons & Auth Section */}
@@ -168,10 +169,11 @@ export default function Navbar() {
               className="md:hidden bg-black border-t border-white/5 overflow-hidden"
             >
               <div className="px-4 pt-2 pb-6 space-y-2">
-                <Link href="/" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Home</Link>
-                <Link href="/about" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Our Story</Link>
-                <Link href="/products" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Shop</Link>
-                <Link href="/contact" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Contact</Link>
+                 <Link href="/" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Home</Link>
+                 <Link href="/about" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Our Story</Link>
+                 <Link href="/products" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Shop</Link>
+                 <Link href="/hamper" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Custom Hamper</Link>
+                 <Link href="/contact" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Contact</Link>
                 <Link href="/products?filter=liked" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold flex items-center gap-2">
                   <Heart className="w-4 h-4 text-red-500" /> Favorites ({likedIds.length})
                 </Link>

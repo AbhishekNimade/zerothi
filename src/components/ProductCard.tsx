@@ -24,6 +24,7 @@ interface ProductCardProps {
     hoverImage?: string | null;
     stock: number;
     rating: number;
+    reviewsCount?: number;
     bannerLine?: string | null;
   };
 }
@@ -91,15 +92,27 @@ export default function ProductCard({ product }: ProductCardProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="glass-card rounded-xl sm:rounded-2xl overflow-hidden border border-white/5 hover:border-gold-500/30 transition-all duration-300 flex flex-col group relative bg-black/40"
+        className={`glass-card rounded-xl sm:rounded-2xl overflow-hidden border border-white/5 transition-all duration-300 flex flex-col group relative bg-black/40 ${
+          product.category === "BANANA_CHIPS"
+            ? "hover:border-mustard-500/35 hover:shadow-[0_0_20px_rgba(229,176,38,0.05)]"
+            : product.category === "COW_GHEE"
+            ? "hover:border-terracotta-500/35 hover:shadow-[0_0_20px_rgba(201,82,43,0.05)]"
+            : "hover:border-nimar-green-500/35 hover:shadow-[0_0_20px_rgba(60,110,71,0.05)]"
+        }`}
       >
-        {/* Product Image Area */}
-        <div className="aspect-square w-full bg-neutral-950 overflow-hidden relative border-b border-white/5">
+        {/* Product Image Area with consistent background framing */}
+        <div className="aspect-square w-full bg-gradient-to-tr from-neutral-950 to-neutral-900/60 overflow-hidden relative border-b border-white/5">
 
           {/* Badges */}
           {isFuture && (
             <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-white/15 text-white text-[8px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-sm uppercase tracking-wider backdrop-blur-sm border border-white/10">
               Coming Soon
+            </div>
+          )}
+
+          {!isFuture && product.reviewsCount && product.reviewsCount > 30 && (
+            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-mustard-500 text-black text-[8px] sm:text-[9px] font-extrabold px-2 py-1 rounded-sm uppercase tracking-wider shadow-[0_0_15px_rgba(229,176,38,0.3)]">
+              ★ Bestseller
             </div>
           )}
 
@@ -126,7 +139,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={product.image}
               alt={product.name}
               fill
-              className={`object-contain p-3 sm:p-4 transition-transform duration-700 ease-out group-hover:scale-105 ${
+              className={`object-contain p-4 sm:p-5 transition-transform duration-700 ease-out group-hover:scale-105 ${
                 product.hoverImage ? "group-hover:opacity-0" : ""
               }`}
             />
@@ -135,7 +148,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 src={product.hoverImage}
                 alt={`${product.name} alternate`}
                 fill
-                className="object-contain p-3 sm:p-4 absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"
+                className="object-contain p-4 sm:p-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"
               />
             )}
           </Link>
@@ -144,14 +157,26 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Product Details */}
         <div className="p-2.5 sm:p-6 flex-1 flex flex-col justify-between gap-2 sm:gap-0">
           <div>
-            {/* Category Label */}
-            <span className="text-[8px] sm:text-[10px] font-bold text-gold-500 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1.5 block">
+            {/* Category Label with color-coding */}
+            <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1.5 block ${
+              product.category === "BANANA_CHIPS"
+                ? "text-mustard-500"
+                : product.category === "COW_GHEE"
+                ? "text-terracotta-500"
+                : "text-nimar-green-400"
+            }`}>
               {categoryLabel}
             </span>
 
             {/* Product Name */}
             <Link href={isFuture ? "#" : `/products/${product.slug}`}>
-              <h3 className="font-cinzel text-[11px] sm:text-lg text-white font-bold tracking-wide group-hover:text-gold-400 transition-colors line-clamp-2 sm:line-clamp-1 leading-tight sm:mb-2">
+              <h3 className={`font-cinzel text-[11px] sm:text-lg text-white font-bold tracking-wide transition-colors line-clamp-2 sm:line-clamp-1 leading-tight sm:mb-2 ${
+                product.category === "BANANA_CHIPS"
+                  ? "group-hover:text-mustard-400"
+                  : product.category === "COW_GHEE"
+                  ? "group-hover:text-terracotta-400"
+                  : "group-hover:text-nimar-green-400"
+              }`}>
                 {product.name}
               </h3>
             </Link>
@@ -160,6 +185,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             <p className="hidden sm:block text-white/60 text-xs font-light line-clamp-2 leading-relaxed mt-1 mb-4">
               {product.description}
             </p>
+
+            {/* Loss Aversion Scarcity Notice */}
+            {!isFuture && !isOutOfStock && product.stock <= 220 && (
+              <div className="text-[9px] sm:text-[10px] font-bold text-amber-500 mt-1 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping inline-block shrink-0" />
+                Only {product.stock} units left in this farm batch!
+              </div>
+            )}
           </div>
 
           {/* Price & Actions Row */}
@@ -173,11 +206,16 @@ export default function ProductCard({ product }: ProductCardProps) {
               ) : (
                 <div className="flex items-center gap-1 sm:gap-2">
                   <span className="text-gold-400 font-bold text-xs sm:text-sm">
-                    ₹{product.price}
+                    ₹{product.category === "BANANA_CHIPS" ? 10 : product.price}
                   </span>
                   {product.originalPrice > product.price && (
                     <span className="text-white/30 text-[9px] sm:text-xs line-through hidden sm:inline">
-                      ₹{product.originalPrice}
+                      ₹{product.category === "BANANA_CHIPS" ? 15 : product.originalPrice}
+                    </span>
+                  )}
+                  {product.category === "BANANA_CHIPS" && (
+                    <span className="text-[7px] sm:text-[8px] font-bold text-gold-500/70 bg-gold-500/10 border border-gold-500/20 px-1.5 py-0.5 rounded-sm uppercase tracking-wide">
+                      30g
                     </span>
                   )}
                 </div>

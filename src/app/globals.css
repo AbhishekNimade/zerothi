@@ -1,8 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700;800&family=Marcellus&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Outfit", "Inter", sans-serif;
+  --font-marcellus: "Marcellus", serif;
   --font-cinzel: "Cinzel", serif;
 
   --color-gold-50: #fffdf5;
@@ -15,18 +16,67 @@
   --color-gold-700: #8c6e17;
   --color-gold-800: #664f0f;
   --color-gold-900: #403006;
+
+  /* Earthy Terracotta (Nimar soil) */
+  --color-terracotta-50: #fdf6f4;
+  --color-terracotta-100: #fbece7;
+  --color-terracotta-200: #f5d4ca;
+  --color-terracotta-300: #eda997;
+  --color-terracotta-400: #e0785c;
+  --color-terracotta-500: #c9522b;
+  --color-terracotta-600: #b5401b;
+  --color-terracotta-700: #933111;
+
+  /* Earthy Mustard (Nimar crops & sun energy) */
+  --color-mustard-50: #fefcf3;
+  --color-mustard-100: #fbf6df;
+  --color-mustard-200: #f7eabf;
+  --color-mustard-300: #f0d690;
+  --color-mustard-400: #eabf5b;
+  --color-mustard-500: #e5b026;
+  --color-mustard-600: #c9931b;
+  --color-mustard-700: #9f7012;
+
+  /* Organic Olive/Farmland Green */
+  --color-nimar-green-50: #f4f8f4;
+  --color-nimar-green-100: #e7f0e7;
+  --color-nimar-green-200: #d0e1d0;
+  --color-nimar-green-300: #abccab;
+  --color-nimar-green-400: #7bab7b;
+  --color-nimar-green-500: #3c6e47;
+  --color-nimar-green-600: #2d5535;
+  --color-nimar-green-700: #213f27;
+
+  /* Oatmeal & Warm Clay Neutrals */
+  --color-oatmeal-50: #fafaf9;
+  --color-oatmeal-100: #f5f5f4;
+  --color-oatmeal-200: #e7e5e4;
+  --color-oatmeal-300: #d6d3d1;
+  --color-oatmeal-400: #a8a29e;
+  --color-oatmeal-500: #78716c;
+  --color-oatmeal-600: #57524d;
+  --color-oatmeal-700: #44403c;
+  --color-oatmeal-800: #292524;
+  --color-oatmeal-900: #1c1917;
+  --color-oatmeal-950: #0c0a09;
 }
 
 @layer base {
   :root {
-    --background: #000000;
-    --foreground: #ffffff;
+    --background: #070707;
+    --foreground: #fafaf9;
   }
 
   body {
     background-color: var(--background);
     color: var(--foreground);
+    font-family: var(--font-sans);
     @apply antialiased selection:bg-gold-500/30 selection:text-gold-300;
+  }
+
+  /* Consistent earthy typography styles (design tokens) */
+  h1, h2, h3, h4 {
+    font-family: var(--font-marcellus), var(--font-cinzel), serif;
   }
 }
 
@@ -35,7 +85,68 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-300 via-gold-500 to-gold-400;
   }
   
-  .glass-card {
-    @apply bg-black/40 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+  .text-gradient-terracotta {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-terracotta-300 via-terracotta-500 to-terracotta-400;
   }
+
+  .text-gradient-mustard {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-mustard-300 via-mustard-500 to-mustard-400;
+  }
+  
+  .glass-card {
+    @apply bg-oatmeal-950/60 backdrop-blur-md border border-white/5 shadow-[0_4px_35px_rgba(0,0,0,0.6)];
+  }
+
+  .glass-card-terracotta {
+    @apply bg-black/60 backdrop-blur-md border border-terracotta-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.7)];
+  }
+
+  /* Reusable text style classes (Design Tokens) */
+  .heading-xl {
+    @apply font-marcellus text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-tight;
+  }
+  
+  .heading-l {
+    @apply font-marcellus text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide leading-snug;
+  }
+
+  .heading-m {
+    @apply font-marcellus text-xl sm:text-2xl md:text-3xl font-bold tracking-wide leading-normal;
+  }
+
+  .body-l {
+    @apply font-sans text-base sm:text-lg font-light leading-relaxed text-oatmeal-200;
+  }
+
+  .body-m {
+    @apply font-sans text-sm sm:text-base font-light leading-relaxed text-oatmeal-300;
+  }
+
+  .body-s {
+    @apply font-sans text-xs sm:text-sm font-light leading-normal text-oatmeal-400;
+  }
+}
+
+@keyframes scrollDot {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  60%       { transform: translateY(12px); opacity: 0.2; }
+}
+
+@keyframes chevronFade {
+  0%, 100% { opacity: 0.7; transform: translateY(0); }
+  50%       { opacity: 0.2; transform: translateY(4px); }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 9px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.3);
 }

@@ -3,8 +3,37 @@ import Footer from "@/components/Footer";
 import ProductsGrid from "@/components/ProductsGrid";
 import { db } from "@/lib/db";
 import { Suspense } from "react";
+import type { Metadata } from "next";
 
-// Statically exported page
+export const metadata: Metadata = {
+  title: "Zerothi | Shop Authentic Nimar Snacks",
+  description: "Browse our catalog of authentic, unadulterated Nimar snacks and pure oils. From hot masala banana chips to organic cow ghee, direct from farm to your home.",
+  alternates: {
+    canonical: "https://zerothi.com/products/",
+  },
+  openGraph: {
+    title: "Zerothi | Shop Authentic Nimar Snacks",
+    description: "Browse our catalog of authentic, unadulterated Nimar snacks and pure oils. From hot masala banana chips to organic cow ghee, direct from farm to your home.",
+    url: "https://zerothi.com/products/",
+    siteName: "Zerothi",
+    images: [
+      {
+        url: "https://zerothi.com/Logo%20Zerothi/Medium%20Logo%20Zerothi-04.png",
+        width: 800,
+        height: 600,
+        alt: "Zerothi Products Catalog",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Zerothi | Shop Authentic Nimar Snacks",
+    description: "Browse our catalog of authentic, unadulterated Nimar snacks and pure oils. From hot masala banana chips to organic cow ghee, direct from farm to your home.",
+    images: ["https://zerothi.com/Logo%20Zerothi/Medium%20Logo%20Zerothi-04.png"],
+  },
+};
 
 export default async function ProductsPage() {
   let products: any[] = [];
