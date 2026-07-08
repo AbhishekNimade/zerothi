@@ -27,9 +27,10 @@ interface ProductCardProps {
     reviewsCount?: number;
     bannerLine?: string | null;
   };
+  minimal?: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, minimal = false }: ProductCardProps) {
   const { addToCart } = useCart();
   const { toggleLike, isLiked } = useLikes();
   const { user } = useAuth();
@@ -195,65 +196,67 @@ export default function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          {/* Price & Actions Row */}
-          <div className="pt-2 sm:pt-4 border-t border-white/5 flex items-center justify-between mt-auto">
-            {/* Price */}
-            <div>
+          {/* Price & Actions Row (Hidden when minimal is true) */}
+          {!minimal && (
+            <div className="pt-2 sm:pt-4 border-t border-white/5 flex items-center justify-between mt-auto">
+              {/* Price */}
+              <div>
+                {isFuture ? (
+                  <span className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">
+                    Preview
+                  </span>
+                ) : (
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <span className="text-gold-400 font-bold text-xs sm:text-sm">
+                      ₹{product.category === "BANANA_CHIPS" ? 10 : product.price}
+                    </span>
+                    {product.originalPrice > product.price && (
+                      <span className="text-white/30 text-[9px] sm:text-xs line-through hidden sm:inline">
+                        ₹{product.category === "BANANA_CHIPS" ? 15 : product.originalPrice}
+                      </span>
+                    )}
+                    {product.category === "BANANA_CHIPS" && (
+                      <span className="text-[7px] sm:text-[8px] font-bold text-gold-500/70 bg-gold-500/10 border border-gold-500/20 px-1.5 py-0.5 rounded-sm uppercase tracking-wide">
+                        30g
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
               {isFuture ? (
-                <span className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">
-                  Preview
+                <button
+                  className="px-2 sm:px-4 py-1 sm:py-2 border border-white/10 text-white/50 text-[8px] sm:text-[10px] font-bold uppercase tracking-wider rounded-sm disabled:cursor-not-allowed"
+                  disabled
+                >
+                  Notify
+                </button>
+              ) : isOutOfStock ? (
+                <span className="text-red-400/80 text-[8px] sm:text-[10px] uppercase font-bold tracking-wider">
+                  Out of Stock
                 </span>
               ) : (
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <span className="text-gold-400 font-bold text-xs sm:text-sm">
-                    ₹{product.category === "BANANA_CHIPS" ? 10 : product.price}
-                  </span>
-                  {product.originalPrice > product.price && (
-                    <span className="text-white/30 text-[9px] sm:text-xs line-through hidden sm:inline">
-                      ₹{product.category === "BANANA_CHIPS" ? 15 : product.originalPrice}
-                    </span>
-                  )}
-                  {product.category === "BANANA_CHIPS" && (
-                    <span className="text-[7px] sm:text-[8px] font-bold text-gold-500/70 bg-gold-500/10 border border-gold-500/20 px-1.5 py-0.5 rounded-sm uppercase tracking-wide">
-                      30g
-                    </span>
-                  )}
+                  {/* Add to cart icon — hidden on very small screens */}
+                  <button
+                    onClick={handleAddToCart}
+                    className="hidden sm:flex w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white items-center justify-center transition-colors focus:outline-none cursor-pointer"
+                    title="Add to Cart"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                  </button>
+                  {/* Buy Now button */}
+                  <button
+                    onClick={handleBuyNow}
+                    className="px-2.5 sm:px-3.5 py-1.5 text-[8px] sm:text-[9px] font-bold uppercase tracking-wider rounded-full bg-gold-500 hover:bg-gold-400 text-black transition-colors focus:outline-none cursor-pointer flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap"
+                  >
+                    Buy Now
+                  </button>
                 </div>
               )}
             </div>
-
-            {/* Action Buttons */}
-            {isFuture ? (
-              <button
-                className="px-2 sm:px-4 py-1 sm:py-2 border border-white/10 text-white/50 text-[8px] sm:text-[10px] font-bold uppercase tracking-wider rounded-sm disabled:cursor-not-allowed"
-                disabled
-              >
-                Notify
-              </button>
-            ) : isOutOfStock ? (
-              <span className="text-red-400/80 text-[8px] sm:text-[10px] uppercase font-bold tracking-wider">
-                Out of Stock
-              </span>
-            ) : (
-              <div className="flex items-center gap-1 sm:gap-2">
-                {/* Add to cart icon — hidden on very small screens */}
-                <button
-                  onClick={handleAddToCart}
-                  className="hidden sm:flex w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white items-center justify-center transition-colors focus:outline-none cursor-pointer"
-                  title="Add to Cart"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                </button>
-                {/* Buy Now button */}
-                <button
-                  onClick={handleBuyNow}
-                  className="px-2.5 sm:px-3.5 py-1.5 text-[8px] sm:text-[9px] font-bold uppercase tracking-wider rounded-full bg-gold-500 hover:bg-gold-400 text-black transition-colors focus:outline-none cursor-pointer flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap"
-                >
-                  Buy Now
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </motion.div>
 

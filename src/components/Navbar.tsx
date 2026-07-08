@@ -21,7 +21,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed w-full z-40 top-0 transition-all duration-500 bg-black/20 backdrop-blur-2xl border-b border-white/[0.06] selection:bg-gold-500/30" style={{ WebkitBackdropFilter: "blur(32px)", backdropFilter: "blur(32px)" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
             <div className="flex items-center h-full">
@@ -31,7 +31,7 @@ export default function Navbar() {
                   alt="Zerothi Logo" 
                   width={220} 
                   height={80} 
-                  className="h-16 md:h-20 w-auto object-contain"
+                  className="h-11 sm:h-16 md:h-20 w-auto object-contain"
                   priority
                 />
               </Link>
@@ -132,7 +132,7 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Actions: Cart & Hamburger */}
-            <div className="flex items-center md:hidden gap-3">
+            <div className="flex items-center md:hidden gap-1.5 xs:gap-3">
               {/* Mobile Shopping Bag */}
               <button 
                 onClick={() => setIsCartOpen(true)}
