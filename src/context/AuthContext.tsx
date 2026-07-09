@@ -16,7 +16,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (name: string, email: string, password: string, phone: string) => Promise<{ success: boolean; error?: string }>;
-  loginWithPhone: (phone: string, name?: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithPhone: (phone: string, otp: string, name?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   checkUserSession: () => Promise<void>;
 }
@@ -129,12 +129,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { success: true };
   };
 
-  const loginWithPhone = async (phone: string, name?: string) => {
+  const loginWithPhone = async (phone: string, otp: string, name?: string) => {
     try {
       const res = await fetch("/api/auth/phone-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, name }),
+        body: JSON.stringify({ phone, otp, name }),
       });
       
       const data = await res.json();

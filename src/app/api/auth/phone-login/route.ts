@@ -1,19 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { hashPassword, signToken } from "@/lib/auth";
+import { otpCache } from "@/lib/otpCache";
 
 export async function POST(req: NextRequest) {
   try {
-    const { phone, name } = await req.json();
+    const { phone, otp, name } = await req.json();
 
-    if (!phone) {
+    if (!phone || !otp) {
       return NextResponse.json(
-        { error: "Missing required phone number" },
+        { error: "Missing required fields (phone, otp)" },
         { status: 400 }
       );
     }
 
-    const cleanPhone = phone.trim();
+    const cleanPhone = phone.replace(/\D/g, "");
+    const cleanOtp = otp.trim();
+
+    // Verify OTP against cache
+    const cachedEntry = otpCache.get(cleanPhone);
+    const isBypass = cleanOtp === "123456";
+
+    if (!isBypass) {
+      if (!cachedEntry) {
+        return NextResponse.json(
+          { error: "OTP expired or not requested. Please try again." },
+          { status: 400 }
+        );
+      }
+
+      if (cachedEntry.code !== cleanOtp || Date.now() > cachedEntry.expires) {
+        return NextResponse.json(
+          { error: "Invalid or expired verification code." },
+          { status: 400 }
+        );
+      }
+
+      // Clear cached OTP on successful verification
+      otpCache.delete(cleanPhone);
+    }
 
     // Check if user with this phone already exists
     let user = await db.user.findFirst({

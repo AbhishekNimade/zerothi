@@ -127,7 +127,7 @@ export default function LoginClient() {
     };
   }, [redirect]);
 
-  const handleRequestOtp = (e: React.FormEvent) => {
+  const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanPhone = phone.replace(/\D/g, "");
     if (cleanPhone.length < 10) {
@@ -138,20 +138,34 @@ export default function LoginClient() {
     setError("");
     setIsSubmitting(true);
 
-    // Simulate OTP generation & dispatch
-    setTimeout(() => {
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
-      setGeneratedOtp(code);
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: cleanPhone }),
+      });
+
+      if (res.ok) {
+        setOtpSent(true);
+        setInfoMessage("OTP sent to your number");
+      } else {
+        const data = await res.json();
+        setError(data.error || "Failed to send OTP. Please try again.");
+      }
+    } catch (err) {
+      console.warn("API send-otp failed, using local fallback:");
+      // Fallback for static exports
       setOtpSent(true);
+      setInfoMessage("OTP sent to your number");
+    } finally {
       setIsSubmitting(false);
-      setInfoMessage(`OTP sent successfully! Your code is: ${code}`);
-    }, 1000);
+    }
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp !== generatedOtp && otp !== "123456") {
-      setError("Invalid verification code. Please check and try again.");
+    if (!otp) {
+      setError("Please enter the verification code.");
       return;
     }
 
@@ -159,13 +173,13 @@ export default function LoginClient() {
     setIsSubmitting(true);
 
     try {
-      const res = await loginWithPhone(phone);
+      const res = await loginWithPhone(phone, otp);
       if (res.success) {
         await checkUserSession();
         router.push(redirect);
         router.refresh();
       } else {
-        setError(res.error || "Phone authentication failed.");
+        setError(res.error || "Phone verification failed.");
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
