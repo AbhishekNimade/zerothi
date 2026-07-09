@@ -51,17 +51,19 @@ export default function Navbar() {
               {/* Icons & Auth Section */}
               <div className="flex items-center space-x-6">
                 {/* Shopping Bag Icon */}
-                <button 
-                  onClick={() => setIsCartOpen(true)}
-                  className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer"
-                >
-                  <ShoppingBag className="w-5 h-5" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                      {cartCount}
-                    </span>
-                  )}
-                </button>
+                {user && (
+                  <button 
+                    onClick={() => setIsCartOpen(true)}
+                    className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer"
+                  >
+                    <ShoppingBag className="w-5 h-5" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                        {cartCount}
+                      </span>
+                    )}
+                  </button>
+                )}
 
                 {/* Auth Dropdown / Login */}
                 {loading ? (
@@ -134,18 +136,20 @@ export default function Navbar() {
             {/* Mobile Actions: Cart & Hamburger (Positioned absolute on right side) */}
             <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center md:hidden gap-1.5 z-20">
               {/* Mobile Shopping Bag */}
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer p-2"
-                aria-label="Open Cart"
-              >
-                <ShoppingBag className="w-5 h-5" />
-                {cartCount > 0 && (
-                  <span className="absolute top-1 right-1 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
+              {user && (
+                <button 
+                  onClick={() => setIsCartOpen(true)}
+                  className="text-white/80 hover:text-gold-400 transition-colors relative focus:outline-none cursor-pointer p-2"
+                  aria-label="Open Cart"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute top-1 right-1 bg-gold-500 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+              )}
 
               {/* Hamburger Toggle */}
               <button

@@ -32,12 +32,12 @@ export default function MobileBottomNav() {
       path: "/products",
       icon: ShoppingBag,
     },
-    {
+    ...(user ? [{
       label: "Cart",
-      path: "/checkout", // directly to checkout/review
+      path: "/checkout",
       icon: ShoppingCart,
       badge: cartCount,
-    },
+    }] : []),
     {
       label: "Account",
       path: user ? "/orders" : "/login",
