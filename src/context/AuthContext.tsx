@@ -16,6 +16,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (name: string, email: string, password: string, phone: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithPhone: (phone: string, name?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   checkUserSession: () => Promise<void>;
 }
@@ -128,6 +129,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { success: true };
   };
 
+  const loginWithPhone = async (phone: string, name?: string) => {
+    try {
+      const res = await fetch("/api/auth/phone-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, name }),
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        setUser(data.user);
+        localStorage.setItem("zerothi_user", JSON.stringify(data.user));
+        logLoginToSheet(data.user.name, data.user.email || data.user.phone, "Phone OTP Login");
+        return { success: true };
+      } else {
+        return { success: false, error: data.error || "Phone Login failed" };
+      }
+    } catch (err) {
+      console.warn("API phone login failed, falling back to LocalStorage:", err);
+    }
+
+    // Local storage mock login fallback for static hosting
+    const cleanPhone = phone.trim();
+    const mockUser = {
+      id: "phone-" + cleanPhone,
+      name: name || `Nimar Guest (${cleanPhone.slice(-4)})`,
+      email: `${cleanPhone}@zerothi.com`,
+      phone: cleanPhone,
+      role: "CUSTOMER"
+    };
+    localStorage.setItem("zerothi_user", JSON.stringify(mockUser));
+    setUser(mockUser);
+    logLoginToSheet(mockUser.name, mockUser.email, "Local Phone OTP Login");
+    return { success: true };
+  };
+
   const logout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
@@ -139,7 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, checkUserSession }}>
+    <AuthContext.Provider value={{ user, loading, login, register, loginWithPhone, logout, checkUserSession }}>
       {children}
     </AuthContext.Provider>
   );
