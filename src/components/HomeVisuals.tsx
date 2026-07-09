@@ -7,9 +7,10 @@ import { Sparkles, Leaf, Droplet, ShieldCheck } from "lucide-react";
 export default function HomeVisuals() {
   const { scrollY } = useScroll();
   const shouldReduceMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Calculate transforms for layered parallax floating ingredients
-  // These will translate Y positions at different speeds (3D depth layers)
   const yLeaf = useTransform(scrollY, [0, 1000], [0, -180]);
   const yGhee = useTransform(scrollY, [0, 1500], [0, 120]);
   const yChili = useTransform(scrollY, [0, 1200], [0, -80]);
@@ -19,12 +20,31 @@ export default function HomeVisuals() {
   const rotateLeaf = useTransform(scrollY, [0, 1000], [0, 45]);
   const rotateSpice = useTransform(scrollY, [0, 1800], [0, -35]);
 
-  const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   if (!mounted) return null;
+
+  // Render static decoration or hide entirely on mobile to ensure smooth scrolling
+  if (isMobile) {
+    return (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-10 opacity-20">
+        <div className="absolute top-[30%] -left-12 w-32 h-32 text-nimar-green-500/20">
+          <Leaf className="w-full h-full transform -rotate-12" />
+        </div>
+        <div className="absolute top-[55%] -right-16 w-24 h-24 text-mustard-500/20">
+          <Droplet className="w-full h-full transform rotate-45" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">

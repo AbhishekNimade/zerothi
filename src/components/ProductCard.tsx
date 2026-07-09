@@ -111,14 +111,14 @@ export default function ProductCard({ product, minimal = false }: ProductCardPro
             </div>
           )}
 
-          {!isFuture && product.reviewsCount && product.reviewsCount > 30 && (
+          {!isFuture && !minimal && product.reviewsCount && product.reviewsCount > 30 && (
             <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-mustard-500 text-black text-[8px] sm:text-[9px] font-extrabold px-2 py-1 rounded-sm uppercase tracking-wider shadow-[0_0_15px_rgba(229,176,38,0.3)]">
               ★ Bestseller
             </div>
           )}
 
           {/* Heart / Like button */}
-          {!isFuture && (
+          {!isFuture && !minimal && (
             <button
               onClick={handleLike}
               className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:text-red-500 transition-colors focus:outline-none cursor-pointer"
@@ -156,22 +156,24 @@ export default function ProductCard({ product, minimal = false }: ProductCardPro
         </div>
 
         {/* Product Details */}
-        <div className="p-2.5 sm:p-6 flex-1 flex flex-col justify-between gap-2 sm:gap-0">
+        <div className={`p-3.5 sm:p-5 flex-1 flex flex-col justify-center ${minimal ? "text-center" : "justify-between"}`}>
           <div>
-            {/* Category Label with color-coding */}
-            <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1.5 block ${
-              product.category === "BANANA_CHIPS"
-                ? "text-mustard-500"
-                : product.category === "COW_GHEE"
-                ? "text-terracotta-500"
-                : "text-nimar-green-400"
-            }`}>
-              {categoryLabel}
-            </span>
+            {/* Category Label with color-coding (Hidden when minimal is true) */}
+            {!minimal && (
+              <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-0.5 sm:mb-1.5 block ${
+                product.category === "BANANA_CHIPS"
+                  ? "text-mustard-500"
+                  : product.category === "COW_GHEE"
+                  ? "text-terracotta-500"
+                  : "text-nimar-green-400"
+              }`}>
+                {categoryLabel}
+              </span>
+            )}
 
             {/* Product Name */}
             <Link href={isFuture ? "#" : `/products/${product.slug}`}>
-              <h3 className={`font-cinzel text-[11px] sm:text-lg text-white font-bold tracking-wide transition-colors line-clamp-2 sm:line-clamp-1 leading-tight sm:mb-2 ${
+              <h3 className={`font-cinzel text-[11px] sm:text-base text-white font-bold tracking-wide transition-colors line-clamp-2 sm:line-clamp-1 leading-tight sm:mb-1.5 ${
                 product.category === "BANANA_CHIPS"
                   ? "group-hover:text-mustard-400"
                   : product.category === "COW_GHEE"
@@ -182,13 +184,15 @@ export default function ProductCard({ product, minimal = false }: ProductCardPro
               </h3>
             </Link>
 
-            {/* Description — hidden on mobile */}
-            <p className="hidden sm:block text-white/60 text-xs font-light line-clamp-2 leading-relaxed mt-1 mb-4">
-              {product.description}
-            </p>
+            {/* Description — hidden on mobile & minimal cards */}
+            {!minimal && (
+              <p className="hidden sm:block text-white/60 text-xs font-light line-clamp-2 leading-relaxed mt-1 mb-4">
+                {product.description}
+              </p>
+            )}
 
-            {/* Loss Aversion Scarcity Notice */}
-            {!isFuture && !isOutOfStock && product.stock <= 220 && (
+            {/* Loss Aversion Scarcity Notice (Hidden when minimal is true) */}
+            {!isFuture && !isOutOfStock && !minimal && product.stock <= 220 && (
               <div className="text-[9px] sm:text-[10px] font-bold text-amber-500 mt-1 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping inline-block shrink-0" />
                 Only {product.stock} units left in this farm batch!
