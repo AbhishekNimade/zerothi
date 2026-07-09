@@ -47,7 +47,7 @@ export default async function Home() {
   try {
     featuredProducts = await db.product.findMany({
       where: { isFeatured: true },
-      take: 4,
+      take: 12,
     });
   } catch (error) {
     console.error("Failed to fetch featured products:", error);

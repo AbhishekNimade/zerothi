@@ -127,11 +127,33 @@ export default function FeaturedProductsClient({ initialProducts }: { initialPro
     );
   }
 
+  // Duplicate lists to ensure seamless wrapping for CSS marquee loop
+  const row1Products = [...products, ...products, ...products]; 
+  const row2Products = [...products].reverse().concat([...products].reverse()).concat([...products].reverse());
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} minimal={true} />
-      ))}
+    <div className="space-y-6 overflow-hidden w-full relative">
+      {/* Row 1: Scrolls Left */}
+      <div className="relative w-full overflow-hidden py-2 flex select-none">
+        <div className="flex w-max gap-4 animate-marquee-left hover:[animation-play-state:paused]">
+          {row1Products.map((product, idx) => (
+            <div key={`r1-${product.id}-${idx}`} className="w-[200px] sm:w-[280px] shrink-0">
+              <ProductCard product={product} minimal={true} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Row 2: Scrolls Right */}
+      <div className="relative w-full overflow-hidden py-2 flex select-none">
+        <div className="flex w-max gap-4 animate-marquee-right hover:[animation-play-state:paused]">
+          {row2Products.map((product, idx) => (
+            <div key={`r2-${product.id}-${idx}`} className="w-[200px] sm:w-[280px] shrink-0">
+              <ProductCard product={product} minimal={true} />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
