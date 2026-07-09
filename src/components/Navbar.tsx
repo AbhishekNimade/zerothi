@@ -22,22 +22,22 @@ export default function Navbar() {
     <>
       <nav className="fixed w-full z-40 top-0 transition-all duration-500 bg-black/20 backdrop-blur-2xl border-b border-white/[0.06] selection:bg-gold-500/30" style={{ WebkitBackdropFilter: "blur(32px)", backdropFilter: "blur(32px)" }}>
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <div className="flex items-center h-full">
-              <Link href="/" className="flex-shrink-0 flex items-center h-full py-2">
+          <div className="relative flex justify-between items-center h-24">
+            {/* Logo (Centered absolutely on mobile, static on desktop) */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center md:static md:translate-x-0 md:translate-y-0 z-10">
+              <Link href="/" className="flex-shrink-0 flex items-center py-2">
                 <Image 
                   src="/Logo%20Zerothi/Small%20Logo%20Zerothi-03.png" 
                   alt="Zerothi Logo" 
                   width={220} 
                   height={80} 
-                  className="h-11 sm:h-16 md:h-20 w-auto object-contain"
+                  className="h-10 sm:h-16 md:h-20 w-auto object-contain"
                   priority
                 />
               </Link>
             </div>
             {/* Right Side: Links and Actions */}
-            <div className="hidden md:flex items-center space-x-6 md:space-x-10 max-md:!hidden">
+            <div className="hidden md:flex items-center space-x-6 md:space-x-10 max-md:!hidden ml-auto">
               
               {/* Desktop Navigation Links */}
               <div className="hidden md:flex items-center space-x-8 max-md:!hidden">
@@ -131,8 +131,8 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Mobile Actions: Cart & Hamburger */}
-            <div className="flex items-center md:hidden gap-1.5 xs:gap-3">
+            {/* Mobile Actions: Cart & Hamburger (Positioned absolute on right side) */}
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center md:hidden gap-1.5 z-20">
               {/* Mobile Shopping Bag */}
               <button 
                 onClick={() => setIsCartOpen(true)}

@@ -319,33 +319,6 @@ export default function SignupClient() {
             </Link>
           </div>
         </motion.div>
-
-        {/* Reciprocity Offer — Downloadable Recipes Guide (Value First, no signup required) */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="mt-6 p-6 rounded-2xl border border-gold-500/20 bg-gold-500/[0.02] text-center space-y-4 shadow-[0_0_30px_rgba(212,175,55,0.05)]"
-        >
-          <div className="flex items-center justify-center gap-2 text-gold-400">
-            <span className="text-xs font-bold uppercase tracking-[0.2em]">Free Gift</span>
-          </div>
-          <div>
-            <h4 className="font-cinzel text-sm font-bold text-white uppercase tracking-wider">
-              5 Traditional Nimar Recipes Guide
-            </h4>
-            <p className="text-[11px] text-white/50 leading-relaxed mt-1 font-light">
-              Get our exclusive culinary guide featuring traditional banana chips chaat and sweet potato ghee halwa. Download it free instantly — no registration required!
-            </p>
-          </div>
-          <a
-            href="/recipes-guide.txt"
-            download="Zerothi-5-Traditional-Nimar-Recipes.txt"
-            className="inline-flex items-center gap-2 px-5 py-2.5 border border-gold-500/50 hover:bg-gold-500 hover:text-black text-gold-400 text-[10px] font-bold uppercase tracking-widest transition-all rounded-sm cursor-pointer"
-          >
-            Download Guide (Free)
-          </a>
-        </motion.div>
       </div>
     </main>
   );
