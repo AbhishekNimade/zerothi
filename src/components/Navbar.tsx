@@ -23,8 +23,8 @@ export default function Navbar() {
       <nav className="fixed w-full z-40 top-0 transition-all duration-500 bg-black/20 backdrop-blur-2xl border-b border-white/[0.06] selection:bg-gold-500/30" style={{ WebkitBackdropFilter: "blur(32px)", backdropFilter: "blur(32px)" }}>
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="relative flex justify-between items-center h-24">
-            {/* Logo (Centered absolutely on mobile, static on desktop) */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center md:static md:translate-x-0 md:translate-y-0 z-10">
+            {/* Logo (Left-aligned on mobile and desktop) */}
+            <div className="flex items-center justify-start z-10">
               <Link href="/" className="flex-shrink-0 flex items-center py-2">
                 <Image 
                   src="/Logo%20Zerothi/Small%20Logo%20Zerothi-03.png" 

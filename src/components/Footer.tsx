@@ -59,7 +59,7 @@ export default function Footer() {
             <div className="flex gap-3 pt-2">
               {/* Instagram — real gradient brand icon */}
               <a
-                href="https://www.instagram.com/zerothi_official/"
+                href="https://www.instagram.com/zerothi_nimar?igsh=OWR3d2FsazI0MXhh&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Follow us on Instagram"

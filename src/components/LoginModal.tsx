@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/context/AuthContext";
-import { X, Phone, ShieldCheck, ArrowRight, Loader2, ShoppingBag, Heart } from "lucide-react";
+import { X, Phone, ShieldCheck, ArrowRight, Loader2, ShoppingBag, Heart, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { logLoginToSheet } from "@/lib/sheets";
@@ -16,11 +16,14 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart" }: LoginModalProps) {
-  const { loginWithPhone, checkUserSession } = useAuth();
+  const { login, loginWithPhone, checkUserSession } = useAuth();
+  const [loginMode, setLoginMode] = useState<"password" | "otp">("password");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
-  const [generatedOtp, setGeneratedOtp] = useState("");
   const [error, setError] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,57 +93,50 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
     setIsGoogleLoading(true);
     setError("");
     try {
-      try {
-        const res = await fetch("/api/auth/google", {
-          method: "POST",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify({ credential: response.credential }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          localStorage.setItem("zerothi_user", JSON.stringify(data.user));
-          logLoginToSheet(data.user.name, data.user.email, "Google Login");
-          await checkUserSession();
-          onClose();
-          onSuccess?.();
-          return;
-        }
-      } catch {}
-
-      const token = response.credential;
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
-        window
-          .atob(base64)
-          .split("")
-          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-          .join("")
-      );
-      const payload = JSON.parse(jsonPayload);
-      if (payload?.email) {
-        const mockUser = {
-          id: payload.sub || "user-" + Date.now(),
-          name: payload.name || "Google User",
-          email: payload.email,
-          role:
-            payload.email.toLowerCase().includes("admin") ||
-            payload.email.toLowerCase() === "it@zerothi.com"
-              ? "ADMIN"
-              : "CUSTOMER",
-        };
-        localStorage.setItem("zerothi_user", JSON.stringify(mockUser));
-        logLoginToSheet(mockUser.name, mockUser.email, "Google Login (Client-Side)");
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("zerothi_user", JSON.stringify(data.user));
+        logLoginToSheet(data.user.name, data.user.email, "Google Login");
         await checkUserSession();
         onClose();
         onSuccess?.();
-      } else {
-        setError("Google Sign-In failed to load profile data.");
+        return;
       }
     } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsGoogleLoading(false);
+    }
+  };
+
+  const handlePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!identifier || !password) {
+      setError("Please enter email/phone and password.");
+      return;
+    }
+
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const res = await login(identifier.trim(), password);
+      if (res.success) {
+        await checkUserSession();
+        onClose();
+        onSuccess?.();
+      } else {
+        setError(res.error || "Invalid email/phone or password.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -215,7 +211,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4" data-lenis-prevent>
-          {/* Backdrop */}
           <motion.div
             key="modal-backdrop"
             initial={{ opacity: 0 }}
@@ -226,7 +221,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
             className="fixed inset-0 bg-black/85 backdrop-blur-md z-0"
           />
 
-          {/* Modal Card */}
           <motion.div
             key="modal-content"
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -235,10 +229,8 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="relative w-full max-w-md bg-[#090909] border border-white/10 rounded-2xl shadow-[0_0_80px_rgba(0,0,0,0.95)] overflow-y-auto max-h-[92vh] z-10 selection:bg-gold-500/30"
           >
-            {/* Gold top accent line */}
             <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-gold-500 to-transparent sticky top-0 z-20" />
 
-            {/* Close Button */}
             <button
               onClick={onClose}
               className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer focus:outline-none z-20"
@@ -247,7 +239,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
             </button>
 
             <div className="p-6 sm:p-8">
-              {/* Header */}
               <div className="text-center mb-6 sm:mb-7">
                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center mx-auto mb-3 sm:mb-4">
                   {iconAndLabel.icon}
@@ -260,7 +251,39 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
                 </p>
               </div>
 
-              {/* Error Alert */}
+              <div className="flex border-b border-white/10 mb-6 bg-white/5 p-1 rounded-lg">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoginMode("password");
+                    setError("");
+                    setInfoMessage("");
+                  }}
+                  className={`flex-1 py-2 text-xs font-semibold uppercase tracking-wider rounded-md transition-all cursor-pointer ${
+                    loginMode === "password"
+                      ? "bg-gold-500 text-black shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                >
+                  Password
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoginMode("otp");
+                    setError("");
+                    setInfoMessage("");
+                  }}
+                  className={`flex-1 py-2 text-xs font-semibold uppercase tracking-wider rounded-md transition-all cursor-pointer ${
+                    loginMode === "otp"
+                      ? "bg-gold-500 text-black shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                >
+                  OTP Code
+                </button>
+              </div>
+
               <AnimatePresence>
                 {error && (
                   <motion.div
@@ -274,7 +297,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
                 )}
               </AnimatePresence>
 
-              {/* Info Alert */}
               <AnimatePresence>
                 {infoMessage && (
                   <motion.div
@@ -288,16 +310,27 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
                 )}
               </AnimatePresence>
 
-              {/* Login Form */}
-              {!otpSent ? (
-                <form onSubmit={handleRequestOtp} className="space-y-4">
+              {loginMode === "password" ? (
+                <form onSubmit={handlePasswordLogin} className="space-y-4">
                   <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                     <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Mobile number e.g. 9876543210"
+                      type="text"
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
+                      placeholder="Email or phone number"
+                      className="w-full bg-black/55 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-11 pr-4 text-white placeholder-white/20 text-xs sm:text-sm focus:outline-none"
+                      required
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Password"
                       className="w-full bg-black/55 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-11 pr-4 text-white placeholder-white/20 text-xs sm:text-sm focus:outline-none"
                       required
                     />
@@ -312,57 +345,101 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
                       <>
-                        Send OTP Code <ArrowRight className="w-4 h-4" />
+                        Sign In <ArrowRight className="w-4 h-4" />
                       </>
                     )}
                   </button>
                 </form>
               ) : (
-                <form onSubmit={handleVerifyOtp} className="space-y-4">
-                  <div className="relative">
-                    <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                    <input
-                      type="text"
-                      maxLength={6}
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      placeholder="••••••"
-                      className="w-full bg-black/55 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-11 pr-4 text-white placeholder-white/20 text-xs sm:text-sm tracking-[0.3em] font-bold text-center focus:outline-none"
-                      required
-                    />
-                  </div>
+                <div>
+                  {!otpSent ? (
+                    <form onSubmit={handleRequestOtp} className="space-y-4">
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="Mobile number e.g. 9876543210"
+                          className="w-full bg-black/55 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-11 pr-4 text-white placeholder-white/20 text-xs sm:text-sm focus:outline-none"
+                          required
+                        />
+                      </div>
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-black font-bold uppercase tracking-widest text-[10px] sm:text-xs rounded-lg transition-all shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-                  >
-                    {isSubmitting ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        Verify & Login <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-black font-bold uppercase tracking-widest text-[10px] sm:text-xs rounded-lg transition-all shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                      >
+                        {isSubmitting ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            Send OTP Code <ArrowRight className="w-4 h-4" />
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  ) : (
+                    <form onSubmit={handleVerifyOtp} className="space-y-4">
+                      <div className="relative">
+                        <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                        <input
+                          type="text"
+                          maxLength={6}
+                          value={otp}
+                          onChange={(e) => setOtp(e.target.value)}
+                          placeholder="••••••"
+                          className="w-full bg-black/55 border border-white/10 focus:border-gold-500 transition-colors rounded-lg py-3.5 pl-11 pr-4 text-white placeholder-white/20 text-xs sm:text-sm tracking-[0.3em] font-bold text-center focus:outline-none"
+                          required
+                        />
+                      </div>
 
-                  <div className="text-center">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setOtpSent(false);
-                        setOtp("");
-                        setInfoMessage("");
-                      }}
-                      className="text-gold-400/80 hover:text-gold-400 text-xs underline cursor-pointer"
-                    >
-                      Change Phone Number
-                    </button>
-                  </div>
-                </form>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-black font-bold uppercase tracking-widest text-[10px] sm:text-xs rounded-lg transition-all shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                      >
+                        {isSubmitting ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            Verify & Login <ArrowRight className="w-4 h-4" />
+                          </>
+                        )}
+                      </button>
+
+                      <div className="text-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOtpSent(false);
+                            setOtp("");
+                            setInfoMessage("");
+                          }}
+                          className="text-gold-400/80 hover:text-gold-400 text-xs underline cursor-pointer bg-transparent border-none"
+                        >
+                          Change Phone Number
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
               )}
 
-              {/* Divider */}
+              <div className="text-center mt-5">
+                <p className="text-white/40 text-xs">
+                  New to Zerothi?{" "}
+                  <Link
+                    href="/signup"
+                    onClick={onClose}
+                    className="text-gold-400 hover:text-gold-300 font-semibold transition-colors underline ml-1 cursor-pointer"
+                  >
+                    Sign Up
+                  </Link>
+                </p>
+              </div>
+
               <div className="relative my-5 flex items-center justify-center">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-white/10" />
@@ -372,7 +449,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
                 </span>
               </div>
 
-              {/* Google Sign-in */}
               <div className="flex justify-center w-full min-h-[44px]">
                 {isGoogleLoading ? (
                   <div className="flex items-center gap-2 text-white/40 text-xs sm:text-sm">
@@ -382,12 +458,11 @@ export default function LoginModal({ isOpen, onClose, onSuccess, reason = "cart"
                   <div id="modalGoogleBtn" className="w-full flex justify-center" />
                 )}
               </div>
-
             </div>
           </motion.div>
         </div>
       )}
-    </ AnimatePresence>,
+    </AnimatePresence>,
     document.body
   );
 }

@@ -90,7 +90,7 @@ export default async function Home() {
       "closes": "21:00"
     },
     "sameAs": [
-      "https://www.instagram.com/zerothi_nimar/"
+      "https://www.instagram.com/zerothi_nimar?igsh=OWR3d2FsazI0MXhh&utm_source=qr"
     ]
   };
 
