@@ -49,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark max-w-full overflow-x-hidden">
+    <html lang="en" suppressHydrationWarning className="dark max-w-full overflow-x-hidden">
       <head>
         <script
           type="application/ld+json"
