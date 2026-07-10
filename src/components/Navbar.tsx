@@ -133,8 +133,8 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Mobile Actions: Cart & Hamburger (Positioned absolute on right side) */}
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center md:hidden gap-1.5 z-20">
+            {/* Mobile Actions: Cart & Hamburger */}
+            <div className="flex items-center md:hidden gap-1.5 z-20">
               {/* Mobile Shopping Bag */}
               {user && (
                 <button 

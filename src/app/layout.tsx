@@ -49,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark max-w-full overflow-x-hidden">
       <head>
         <script
           type="application/ld+json"
@@ -82,7 +82,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body suppressHydrationWarning className="font-sans min-h-full flex flex-col bg-black text-white antialiased">
+      <body suppressHydrationWarning className="font-sans min-h-full flex flex-col bg-black text-white antialiased max-w-full overflow-x-hidden">
         <AuthProvider>
           <CartProvider>
             <LikesProvider>
