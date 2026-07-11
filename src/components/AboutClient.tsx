@@ -88,7 +88,7 @@ const ADVISORS = [
   {
     initials: "VM",
     name: "Vinod Malaviya",
-    role: "Director",
+    role: "Adviser",
     domain: "Energy & Infrastructure",
     image: "/director/team-vinod-sir.webp",
     description: "Transforming India's water future, and now its energy future. With an esteemed career in water treatment and environmental services as the co-founder of Shubham Hydrosys, Vinod brings 18+ years of high-level project governance, operations, and large-scale infrastructure expertise. Today, he translates those decades of execution into building scalable, reliable solar systems and clean energy frameworks across Madhya Pradesh.",
