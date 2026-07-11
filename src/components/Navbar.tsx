@@ -22,7 +22,7 @@ export default function Navbar() {
     <>
       <nav className="fixed w-full z-40 top-0 transition-all duration-500 bg-black/20 backdrop-blur-2xl border-b border-white/[0.06] selection:bg-gold-500/30" style={{ WebkitBackdropFilter: "blur(32px)", backdropFilter: "blur(32px)" }}>
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="relative flex justify-between items-center h-24">
+          <div className="relative flex justify-between items-center h-16 md:h-20">
             {/* Logo (Left-aligned on mobile and desktop) */}
             <div className="flex items-center justify-start z-10">
               <Link href="/" className="flex-shrink-0 flex items-center py-2">
@@ -31,7 +31,7 @@ export default function Navbar() {
                   alt="Zerothi Logo" 
                   width={220} 
                   height={80} 
-                  className="h-10 sm:h-16 md:h-20 w-auto object-contain"
+                  className="h-9 md:h-12 w-auto object-contain"
                   priority
                 />
               </Link>
