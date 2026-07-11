@@ -79,7 +79,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
   const [isBundleExpanded, setIsBundleExpanded] = useState(false);
 
   const lifestyleImage = product.category === "BANANA_CHIPS"
-    ? "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=800&auto=format&fit=crop"
+    ? "https://images.unsplash.com/photo-1528825871115-3581a5387919?q=80&w=800&auto=format&fit=crop"
     : product.category === "COW_GHEE"
     ? "https://images.unsplash.com/photo-1631451095765-2c91616fc9e6?q=80&w=800&auto=format&fit=crop"
     : product.category === "OIL" && product.name.toLowerCase().includes("coconut")
