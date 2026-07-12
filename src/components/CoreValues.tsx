@@ -77,24 +77,45 @@ export default function CoreValues() {
 
 // ── 3D Flip Card (click-based, mobile-friendly) ──
 function FlipCard({ item }: { item: ValueItem }) {
+  const [isHovered, setIsHovered] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = item.icon;
+
+  const handleMouseEnter = () => {
+    if (window.matchMedia("(hover: hover)").matches) {
+      setIsHovered(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (window.matchMedia("(hover: hover)").matches) {
+      setIsHovered(false);
+    }
+  };
+
+  const handleClick = () => {
+    setIsFlipped((prev) => !prev);
+  };
 
   const silentGlow = "rgba(212, 175, 55, 0.12)";
   const activeGlow = "rgba(212, 175, 55, 0.22)";
   const hoverBorder = "border-gold-500/30";
 
+  const shouldShowBack = isHovered || isFlipped;
+
   return (
     <div
-      onClick={() => setIsFlipped((prev) => !prev)}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className="relative w-full h-[320px] rounded-2xl cursor-pointer select-none"
       style={{ perspective: 1200 }}
     >
       {/* ── CARD OUTER ── */}
       <motion.div
         animate={{
-          rotateY: isFlipped ? 180 : 0,
-          boxShadow: isFlipped
+          rotateY: shouldShowBack ? 180 : 0,
+          boxShadow: shouldShowBack
             ? `0 20px 40px -10px ${activeGlow}, 0 0 25px 1px ${silentGlow}`
             : "0 4px 30px rgba(0,0,0,0.15)"
         }}
@@ -106,7 +127,7 @@ function FlipCard({ item }: { item: ValueItem }) {
         {/* ── CARD FRONT ── */}
         <div
           className={`absolute inset-0 w-full h-full glass-card p-8 rounded-2xl border border-white/5 bg-black/45 ${
-            isFlipped ? "" : hoverBorder
+            shouldShowBack ? "" : hoverBorder
           }`}
           style={{ backfaceVisibility: "hidden" }}
         >
@@ -127,7 +148,7 @@ function FlipCard({ item }: { item: ValueItem }) {
           </div>
 
           <div className="relative z-10 text-[9px] font-bold text-gold-500/40 uppercase tracking-widest flex items-center gap-1.5 mt-4">
-            <span>Tap to reveal details</span>
+            <span>Hover or Tap to reveal details</span>
             <ArrowRight className="w-3 h-3" />
           </div>
         </div>
