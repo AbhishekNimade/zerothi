@@ -560,13 +560,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
             </div>
           ) : (
             <div className="space-y-4">
-              {localProduct.stock <= 220 && (
-                <div className="p-3.5 bg-amber-500/10 border border-amber-500/25 text-gold-400 rounded-xl text-[11px] font-bold flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping inline-block shrink-0" />
-                  Hurry! Only {localProduct.stock} units left in this fresh-harvest batch.
-                </div>
-              )}
-              <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
                 {/* Quantity clickers */}
                 <div className="flex items-center justify-between border border-white/10 bg-black/60 rounded-lg overflow-hidden py-3 px-5 sm:w-36">
                   <button 

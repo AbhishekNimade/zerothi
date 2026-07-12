@@ -126,57 +126,76 @@ export default function AboutClient() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
       </section>
 
-      {/* ── About Zerothi — AEO Factual Section ── */}
+      {/* ── About Zerothi — Redesigned Card Layout ── */}
       <section
         id="about-zerothi"
         aria-label="About Zerothi"
         className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-white/5"
       >
-        <div className="mb-10">
+        <div className="mb-12">
           <span className="text-[10px] font-bold text-gold-500 tracking-[0.3em] uppercase block mb-2">Brand Overview</span>
           <h2 className="font-cinzel text-3xl md:text-4xl font-bold text-white">About Zerothi</h2>
+          <div className="w-12 h-0.5 bg-gold-500 mt-4 rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm leading-relaxed">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* What Zerothi is */}
-          <div className="space-y-2">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500">What is Zerothi?</h3>
-            <p className="text-white/70">
+          <div className="glass-card p-7 rounded-2xl border border-white/8 bg-black/40 hover:border-gold-500/20 transition-all duration-300 group">
+            <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500/20 transition-colors">
+              <svg className="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+            </div>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500 mb-2">What is Zerothi?</h3>
+            <p className="text-white/70 text-sm font-light leading-relaxed">
               Zerothi is a regional food brand based in Barwani, Madhya Pradesh, India. The company produces and sells traditional food products sourced from the Nimar agricultural belt — a fertile region along the Narmada River in western Madhya Pradesh known for banana cultivation, dairy farming, and oilseed crops.
             </p>
           </div>
 
           {/* What it sells */}
-          <div className="space-y-2">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500">What does Zerothi sell?</h3>
-            <p className="text-white/70">
+          <div className="glass-card p-7 rounded-2xl border border-white/8 bg-black/40 hover:border-gold-500/20 transition-all duration-300 group">
+            <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500/20 transition-colors">
+              <svg className="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" /></svg>
+            </div>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500 mb-2">What does Zerothi sell?</h3>
+            <p className="text-white/70 text-sm font-light leading-relaxed">
               Zerothi sells banana chips (in Salted, Tomato, Peri-Peri, and Pudina flavors), pure cow ghee made by the traditional bilona/granular curd churning method, and cold-pressed wood-pressed oils including groundnut and coconut varieties. All products are manufactured without artificial preservatives, trans fats, or synthetic color agents.
             </p>
           </div>
 
           {/* Where it&apos;s based */}
-          <div className="space-y-2">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500">Where is Zerothi based?</h3>
-            <p className="text-white/70">
+          <div className="glass-card p-7 rounded-2xl border border-white/8 bg-black/40 hover:border-gold-500/20 transition-all duration-300 group">
+            <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500/20 transition-colors">
+              <svg className="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+            </div>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500 mb-2">Where is Zerothi based?</h3>
+            <p className="text-white/70 text-sm font-light leading-relaxed">
               Zerothi&apos;s operations are headquartered in Barwani, Madhya Pradesh, India (PIN 451551). Raw materials are sourced directly from farmers in the Nimar region. Products are sold online via zerothi.com and ship to customers across India.
             </p>
           </div>
 
           {/* Sourcing story */}
-          <div className="space-y-2">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500">Sourcing and production</h3>
-            <p className="text-white/70">
+          <div className="glass-card p-7 rounded-2xl border border-white/8 bg-black/40 hover:border-gold-500/20 transition-all duration-300 group">
+            <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500/20 transition-colors">
+              <svg className="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
+            </div>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500 mb-2">Sourcing and production</h3>
+            <p className="text-white/70 text-sm font-light leading-relaxed">
               Zerothi procures raw materials — including fresh Nimar bananas, cow milk, and groundnut/coconut seeds — directly from local farming families through fair-trade agreements. Processing and packaging is carried out by women-led self-help collectives (SHGs) in Barwani. Each product batch is nitrogen-flushed before sealing to preserve freshness without refrigeration.
             </p>
           </div>
 
-          {/* Differentiation */}
-          <div className="md:col-span-2 space-y-2">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500">What differentiates Zerothi from other brands?</h3>
-            <p className="text-white/70">
-              Unlike mass-produced food brands, Zerothi maintains full farm-to-shelf traceability: each batch is linked to a specific sourcing farm in Nimar. Products contain zero artificial preservatives, zero trans fat, and zero artificial coloring agents. The brand uses traditional methods — such as the bilona churning process for ghee and the wooden ghani press for oils — that are largely absent in commercial-scale food manufacturing. The business model directly benefits farming families and women&apos;s collectives in a Tier-3 district of Madhya Pradesh.
-            </p>
+          {/* Differentiation - full width */}
+          <div className="md:col-span-2 glass-card p-7 rounded-2xl border border-white/8 bg-black/40 hover:border-gold-500/20 transition-all duration-300 group relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-gold-400 to-amber-600 rounded-l-2xl" />
+            <div className="pl-4">
+              <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500/20 transition-colors">
+                <svg className="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+              </div>
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500 mb-2">What differentiates Zerothi from other brands?</h3>
+              <p className="text-white/70 text-sm font-light leading-relaxed">
+                Unlike mass-produced food brands, Zerothi maintains full farm-to-shelf traceability: each batch is linked to a specific sourcing farm in Nimar. Products contain zero artificial preservatives, zero trans fat, and zero artificial coloring agents. The brand uses traditional methods — such as the bilona churning process for ghee and the wooden ghani press for oils — that are largely absent in commercial-scale food manufacturing. The business model directly benefits farming families and women&apos;s collectives in a Tier-3 district of Madhya Pradesh.
+              </p>
+            </div>
           </div>
 
         </div>
@@ -231,18 +250,9 @@ export default function AboutClient() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="glass-card rounded-2xl overflow-hidden border border-white/10 bg-[#070707] h-full flex flex-col md:flex-row"
+                className="glass-card rounded-2xl overflow-hidden border border-white/10 bg-[#070707] h-full flex flex-col"
               >
-                <div className="w-full md:w-1/2 aspect-square md:aspect-auto relative min-h-[250px] bg-neutral-950">
-                  <Image
-                    src={TIMELINE_STEPS[activeStep].image}
-                    alt={TIMELINE_STEPS[activeStep].title}
-                    fill
-                    className="object-cover opacity-80"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-transparent to-transparent" />
-                </div>
-                <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                <div className="p-8 md:p-12 flex flex-col justify-center flex-1">
                   <span className="text-[10px] font-bold text-gold-500 tracking-[0.2em] uppercase">
                     {TIMELINE_STEPS[activeStep].subtitle}
                   </span>
@@ -456,7 +466,6 @@ export default function AboutClient() {
       </section>
 
       {/* ── Leadership Advisory ── */}
-      {false && (
       <section className="py-24 bg-[#040404] border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -550,7 +559,6 @@ export default function AboutClient() {
           </div>
         </div>
       </section>
-      )}
 
       <Footer />
     </main>

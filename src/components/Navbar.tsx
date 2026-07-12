@@ -44,7 +44,6 @@ export default function Navbar() {
                  <Link href="/" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Home</Link>
                  <Link href="/about" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Our Story</Link>
                  <Link href="/products" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Shop</Link>
-                 <Link href="/hamper" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Custom Hamper</Link>
                  <Link href="/contact" className="text-white/80 hover:text-gold-400 focus:outline-none transition-colors uppercase text-xs tracking-[0.2em] font-semibold">Contact</Link>
               </div>
 
@@ -176,7 +175,6 @@ export default function Navbar() {
                  <Link href="/" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Home</Link>
                  <Link href="/about" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Our Story</Link>
                  <Link href="/products" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Shop</Link>
-                 <Link href="/hamper" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Custom Hamper</Link>
                  <Link href="/contact" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold">Contact</Link>
                 <Link href="/products?filter=liked" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white/80 hover:text-gold-400 uppercase text-xs tracking-wider font-semibold flex items-center gap-2">
                   <Heart className="w-4 h-4 text-red-500" /> Favorites ({likedIds.length})

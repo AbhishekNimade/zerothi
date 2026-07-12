@@ -75,100 +75,74 @@ export default function CoreValues() {
   );
 }
 
-// ── 3D Hover Flip Card ──
+// ── 3D Flip Card (click-based, mobile-friendly) ──
 function FlipCard({ item }: { item: ValueItem }) {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
   const Icon = item.icon;
 
-  // Silent warm gold/amber theme parameters for a premium, unified layout
   const silentGlow = "rgba(212, 175, 55, 0.12)";
   const activeGlow = "rgba(212, 175, 55, 0.22)";
-  const gradientColor = "from-gold-500/20 to-amber-500/10";
-  const hoverBorder = "group-hover:border-gold-500/30";
+  const hoverBorder = "border-gold-500/30";
 
   return (
     <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative w-full h-[320px] rounded-2xl cursor-pointer group"
+      onClick={() => setIsFlipped((prev) => !prev)}
+      className="relative w-full h-[320px] rounded-2xl cursor-pointer select-none"
       style={{ perspective: 1200 }}
     >
-      {/* ── CARD OUTER GLOW CONTAINER ── */}
+      {/* ── CARD OUTER ── */}
       <motion.div
         animate={{
-          rotateY: isHovered ? 180 : 0,
-          boxShadow: isHovered 
-            ? `0 20px 40px -10px ${activeGlow}, 0 0 25px 1px ${silentGlow}` 
+          rotateY: isFlipped ? 180 : 0,
+          boxShadow: isFlipped
+            ? `0 20px 40px -10px ${activeGlow}, 0 0 25px 1px ${silentGlow}`
             : "0 4px 30px rgba(0,0,0,0.15)"
         }}
-        transition={{ type: "spring", stiffness: 150, damping: 18 }}
-        className="w-full h-full relative rounded-2xl transition-all duration-300"
-        style={{ transformStyle: "preserve-3d" }}
+        transition={{ type: "spring", stiffness: 200, damping: 26, mass: 0.8 }}
+        className="w-full h-full relative rounded-2xl"
+        style={{ transformStyle: "preserve-3d", willChange: "transform" }}
       >
-        
+
         {/* ── CARD FRONT ── */}
         <div
-          className={`absolute inset-0 w-full h-full glass-card p-8 rounded-2xl border border-white/5 bg-black/45 transition-all duration-500 ${hoverBorder}`}
+          className={`absolute inset-0 w-full h-full glass-card p-8 rounded-2xl border border-white/5 bg-black/45 ${
+            isFlipped ? "" : hoverBorder
+          }`}
           style={{ backfaceVisibility: "hidden" }}
         >
-          {/* Ambient silent light glow behind the icon */}
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-gradient-to-br from-gold-500/5 to-transparent opacity-10 group-hover:opacity-25 rounded-full blur-2xl transition-opacity duration-500" />
-
-          {/* Light sweep flash overlay on hover */}
-          <div className="absolute inset-0 w-full h-full overflow-hidden rounded-2xl pointer-events-none">
-            <motion.div 
-              animate={{ x: isHovered ? "150%" : "-150%" }}
-              transition={{ duration: 0.95, ease: "easeInOut" }}
-              className="absolute inset-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/[0.06] to-transparent skew-x-[-25deg]"
-            />
-          </div>
+          <div className="absolute -top-12 -right-12 w-32 h-32 bg-gradient-to-br from-gold-500/5 to-transparent opacity-10 rounded-full blur-2xl" />
 
           <div className="relative z-10">
-            {/* Icon Box with internal glow */}
-            <div className="w-12 h-12 rounded-xl bg-gold-500/10 flex items-center justify-center text-gold-400 mb-6 transition-all duration-300 group-hover:scale-110 group-hover:bg-gold-500/15">
+            <div className="w-12 h-12 rounded-xl bg-gold-500/10 flex items-center justify-center text-gold-400 mb-6">
               <Icon className={`w-6 h-6 ${item.id === "taste" ? "rotate-[-45deg]" : ""}`} />
             </div>
 
-            {/* Title */}
-            <h3 className="text-lg font-bold text-white mb-3 tracking-wide group-hover:text-gold-400 transition-colors">
+            <h3 className="text-lg font-bold text-white mb-3 tracking-wide">
               {item.title}
             </h3>
 
-            {/* Short Description */}
             <p className="text-white/60 text-xs font-light leading-relaxed">
               {item.shortDesc}
             </p>
           </div>
 
-          {/* Hint */}
           <div className="relative z-10 text-[9px] font-bold text-gold-500/40 uppercase tracking-widest flex items-center gap-1.5 mt-4">
-            <span>Hover to reveal details</span>
-            <ArrowRight className="w-3 h-3 animate-pulse" />
+            <span>Tap to reveal details</span>
+            <ArrowRight className="w-3 h-3" />
           </div>
         </div>
 
         {/* ── CARD BACK ── */}
         <div
-          className={`absolute inset-0 w-full h-full glass-card p-6 rounded-2xl border bg-[#080808]/95 flex flex-col justify-between text-left transition-all duration-500 ${hoverBorder}`}
+          className="absolute inset-0 w-full h-full glass-card p-6 rounded-2xl border border-gold-500/20 bg-[#080808]/95 flex flex-col justify-between text-left"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)"
           }}
         >
-          {/* Ambient top light glow */}
           <div className="absolute -top-12 -left-12 w-32 h-32 bg-gradient-to-br from-gold-500/5 to-transparent opacity-10 rounded-full blur-2xl" />
 
-          {/* Light sweep flash on reveal */}
-          <div className="absolute inset-0 w-full h-full overflow-hidden rounded-2xl pointer-events-none">
-            <motion.div 
-              animate={{ x: isHovered ? "150%" : "-150%" }}
-              transition={{ duration: 0.95, ease: "easeInOut", delay: 0.1 }}
-              className="absolute inset-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/[0.06] to-transparent skew-x-[-25deg]"
-            />
-          </div>
-
           <div className="relative z-10 space-y-4">
-            {/* Top header */}
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-400">
                 <Icon className={`w-4 h-4 ${item.id === "taste" ? "rotate-[-45deg]" : ""}`} />
@@ -183,13 +157,11 @@ function FlipCard({ item }: { item: ValueItem }) {
               </div>
             </div>
 
-            {/* Detailed text */}
             <p className="text-white/75 text-xs font-light leading-relaxed">
               {item.detailedDesc}
             </p>
           </div>
 
-          {/* Metrics Checklist */}
           <div className="relative z-10 bg-white/[0.02] border border-white/5 rounded-xl p-3.5 space-y-2">
             <h5 className="text-[9px] uppercase tracking-wider text-gold-400 font-bold flex items-center gap-1.5">
               <Sparkles className="w-3 h-3" />

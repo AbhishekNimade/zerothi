@@ -191,13 +191,7 @@ export default function ProductCard({ product, minimal = false }: ProductCardPro
               </p>
             )}
 
-            {/* Loss Aversion Scarcity Notice (Hidden when minimal is true) */}
-            {!isFuture && !isOutOfStock && !minimal && product.stock <= 220 && (
-              <div className="text-[9px] sm:text-[10px] font-bold text-amber-500 mt-1 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping inline-block shrink-0" />
-                Only {product.stock} units left in this farm batch!
-              </div>
-            )}
+
           </div>
 
           {/* Price & Actions Row (Hidden when minimal is true) */}

@@ -8,6 +8,8 @@ import Navbar from "@/components/Navbar";
 import { ArrowRight, Phone, ShieldCheck, Loader2, Mail, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { logLoginToSheet } from "@/lib/sheets";
+import { auth } from "@/lib/firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
 
 export default function LoginClient() {
   const { login, loginWithPhone, checkUserSession } = useAuth();
@@ -21,6 +23,7 @@ export default function LoginClient() {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const [error, setError] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -168,23 +171,26 @@ export default function LoginClient() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/auth/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: cleanPhone }),
-      });
-
-      if (res.ok) {
-        setOtpSent(true);
-        setInfoMessage("OTP sent to your number");
-      } else {
-        const data = await res.json();
-        setError(data.error || "Failed to send OTP. Please try again.");
+      if (!(window as any).recaptchaVerifier) {
+        (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+          size: 'invisible',
+        });
       }
-    } catch (err) {
-      console.warn("API send-otp failed, using local fallback:");
+
+      const phoneWithCode = cleanPhone.startsWith('+') ? cleanPhone : `+91${cleanPhone}`;
+      const appVerifier = (window as any).recaptchaVerifier;
+      const confirmation = await signInWithPhoneNumber(auth, phoneWithCode, appVerifier);
+      
+      setConfirmationResult(confirmation);
       setOtpSent(true);
-      setInfoMessage("OTP sent to your number");
+      setInfoMessage("OTP sent securely via Firebase");
+    } catch (err: any) {
+      console.error("Firebase send OTP failed:", err);
+      setError(err.message || "Failed to send OTP. Please try again.");
+      if ((window as any).recaptchaVerifier) {
+        (window as any).recaptchaVerifier.clear();
+        (window as any).recaptchaVerifier = null;
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -201,16 +207,26 @@ export default function LoginClient() {
     setIsSubmitting(true);
 
     try {
-      const res = await loginWithPhone(phone, otp);
+      if (!confirmationResult) {
+        throw new Error("No OTP request found. Please request OTP again.");
+      }
+      
+      // Verify OTP with Firebase
+      const result = await confirmationResult.confirm(otp);
+      const firebaseUser = result.user;
+      
+      // Sync with our local backend/context
+      const res = await loginWithPhone(firebaseUser.phoneNumber || phone, "firebase-verified");
       if (res.success) {
         await checkUserSession();
         router.push(redirect);
         router.refresh();
       } else {
-        setError(res.error || "Phone verification failed.");
+        setError(res.error || "Phone verification failed during local sync.");
       }
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
+    } catch (err: any) {
+      console.error("Firebase verify OTP failed:", err);
+      setError(err.message || "Invalid OTP or something went wrong.");
     } finally {
       setIsSubmitting(false);
     }
@@ -225,6 +241,9 @@ export default function LoginClient() {
       </div>
 
       <Navbar />
+      
+      {/* Firebase Recaptcha Container (Invisible) */}
+      <div id="recaptcha-container"></div>
 
       <div className="relative z-10 w-full max-w-md mx-auto px-4 mt-20">
         <motion.div 
