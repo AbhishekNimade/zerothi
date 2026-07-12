@@ -456,6 +456,7 @@ export default function AboutClient() {
       </section>
 
       {/* ── Leadership Advisory ── */}
+      {false && (
       <section className="py-24 bg-[#040404] border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -549,6 +550,7 @@ export default function AboutClient() {
           </div>
         </div>
       </section>
+      )}
 
       <Footer />
     </main>
