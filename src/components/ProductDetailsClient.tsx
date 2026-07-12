@@ -73,7 +73,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // Phase 4: conversion and AOV optimization states
-  const [purchaseType, setPurchaseType] = useState<"one-time" | "subscription">("subscription"); // Smart Default
+  const [purchaseType, setPurchaseType] = useState<"one-time" | "subscription">("one-time"); // One-Time Default
   const [subscriptionFreq, setSubscriptionFreq] = useState<"30" | "15" | "60">("30");
   const [bundleTier, setBundleTier] = useState<1 | 2 | 4 | 6>(1);
   const [isBundleExpanded, setIsBundleExpanded] = useState(false);
@@ -220,16 +220,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
     : Math.round(localProduct.originalPrice * currentMultiplier);
 
   // Apply subscription or bundling multipliers (AOV Optimization)
-  const activeDiscountMultiplier = 
-    purchaseType === "subscription"
-      ? 0.85 // Save 15%
-      : bundleTier === 2
-      ? 0.95 // Save 5%
-      : bundleTier === 4
-      ? 0.90 // Save 10%
-      : bundleTier === 6
-      ? 0.85 // Save 15%
-      : 1.0;
+  const activeDiscountMultiplier = 1.0;
 
   const currentPrice = Math.round(baseVariantPrice * activeDiscountMultiplier * bundleTier);
   const currentOriginalPrice = Math.round(baseVariantOriginalPrice * bundleTier);
@@ -257,8 +248,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
     if (purchaseType === "subscription") {
       purchaseSuffix = ` - Subscribed (Every ${subscriptionFreq} Days)`;
     } else if (bundleTier > 1) {
-      const savings = bundleTier === 2 ? "5%" : bundleTier === 4 ? "10%" : "15%";
-      purchaseSuffix = ` - Bundle of ${bundleTier} (${savings} Off)`;
+      purchaseSuffix = ` - Pack of ${bundleTier}`;
     }
 
     const sizeSuffix = hasSizes ? ` (${selectedSize})` : "";
@@ -325,26 +315,28 @@ export default function ProductDetailsClient({ product, relatedProducts, product
           </div>
           
           {/* Thumbnails to toggle active image (Smart Selection) */}
-          <div className="grid grid-cols-2 gap-4">
-            <button
-              onClick={() => setActiveImage(product.image)}
-              className={`aspect-square rounded-xl overflow-hidden relative border bg-neutral-950 p-2 transition-all duration-300 cursor-pointer ${
-                activeImage === product.image ? "border-gold-500 shadow-[0_0_10px_rgba(212,175,55,0.2)]" : "border-white/5 hover:border-white/20"
-              }`}
-            >
-              <Image src={product.image} alt="Packaging Mockup" fill className="object-contain p-3" />
-              <span className="absolute bottom-2 left-0 right-0 text-center text-[8px] uppercase tracking-wider text-white/55 bg-black/70 py-0.5">Packaging</span>
-            </button>
-            <button
-              onClick={() => setActiveImage(lifestyleImage)}
-              className={`aspect-square rounded-xl overflow-hidden relative border bg-neutral-950 p-2 transition-all duration-300 cursor-pointer ${
-                activeImage === lifestyleImage ? "border-gold-500 shadow-[0_0_10px_rgba(212,175,55,0.2)]" : "border-white/5 hover:border-white/20"
-              }`}
-            >
-              <Image src={lifestyleImage} alt="Lifestyle Sourcing" fill className="object-cover" />
-              <span className="absolute bottom-2 left-0 right-0 text-center text-[8px] uppercase tracking-wider text-white/55 bg-black/70 py-0.5">Sourcing Shot</span>
-            </button>
-          </div>
+          {!isChips && (
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => setActiveImage(product.image)}
+                className={`aspect-square rounded-xl overflow-hidden relative border bg-neutral-950 p-2 transition-all duration-300 cursor-pointer ${
+                  activeImage === product.image ? "border-gold-500 shadow-[0_0_10px_rgba(212,175,55,0.2)]" : "border-white/5 hover:border-white/20"
+                }`}
+              >
+                <Image src={product.image} alt="Packaging Mockup" fill className="object-contain p-3" />
+                <span className="absolute bottom-2 left-0 right-0 text-center text-[8px] uppercase tracking-wider text-white/55 bg-black/70 py-0.5">Packaging</span>
+              </button>
+              <button
+                onClick={() => setActiveImage(lifestyleImage)}
+                className={`aspect-square rounded-xl overflow-hidden relative border bg-neutral-950 p-2 transition-all duration-300 cursor-pointer ${
+                  activeImage === lifestyleImage ? "border-gold-500 shadow-[0_0_10px_rgba(212,175,55,0.2)]" : "border-white/5 hover:border-white/20"
+                }`}
+              >
+                <Image src={lifestyleImage} alt="Lifestyle Sourcing" fill className="object-cover" />
+                <span className="absolute bottom-2 left-0 right-0 text-center text-[8px] uppercase tracking-wider text-white/55 bg-black/70 py-0.5">Sourcing Shot</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Product Meta Details */}
@@ -389,9 +381,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
               )}
             </div>
             {purchaseType === "subscription" ? (
-              <p className="text-[10px] text-emerald-400 font-bold">🎉 Includes 15% Subscription Discount!</p>
-            ) : bundleTier > 1 ? (
-              <p className="text-[10px] text-emerald-400 font-bold">🎉 Includes bulk bundle discounts!</p>
+              <p className="text-[10px] text-gold-400 font-bold">🎉 Scheduled recurring delivery active.</p>
             ) : (
               <p className="text-[10px] text-white/40 font-light">Inclusive of all local regional taxes.</p>
             )}
@@ -474,9 +464,6 @@ export default function ProductDetailsClient({ product, relatedProducts, product
                     : "bg-black/40 border-white/10 hover:border-white/25 text-white/70"
                 }`}
               >
-                <div className="absolute -top-2.5 right-4 bg-emerald-500 text-black text-[8px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
-                  Save 15%
-                </div>
                 <h4 className="text-xs font-bold uppercase tracking-wider">Subscribe & Save</h4>
                 <p className="text-[9px] text-white/50 mt-1 leading-snug">Deliver fresh batches automatically. Pause or cancel anytime.</p>
                 
@@ -520,7 +507,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
                 onClick={() => setIsBundleExpanded(!isBundleExpanded)}
                 className="w-full flex items-center justify-between px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white hover:text-gold-400 transition-colors cursor-pointer"
               >
-                <span>📦 Buy a Bundle & Save up to 15%</span>
+                <span>📦 Buy in Bulk (Multi-Pack)</span>
                 <span className="text-gold-500 text-[10px] font-bold">
                   {isBundleExpanded ? "Collapse ▲" : "Expand ▼"}
                 </span>
@@ -529,10 +516,10 @@ export default function ProductDetailsClient({ product, relatedProducts, product
               {isBundleExpanded && (
                 <div className="p-4 border-t border-white/5 bg-black/25 grid grid-cols-2 gap-3">
                   {[
-                    { tier: 1, label: "Single Unit", desc: "Standard", discount: "0%" },
-                    { tier: 2, label: "Double Pack", desc: "Save 5%", discount: "5%" },
-                    { tier: 4, label: "Family Pack of 4", desc: "Save 10%", discount: "10%" },
-                    { tier: 6, label: "Party Pack of 6", desc: "Save 15%", discount: "15%" }
+                    { tier: 1, label: "Single Unit", desc: "1 Pack" },
+                    { tier: 2, label: "Double Pack", desc: "2 Packs" },
+                    { tier: 4, label: "Family Pack of 4", desc: "4 Packs" },
+                    { tier: 6, label: "Party Pack of 6", desc: "6 Packs" }
                   ].map((btn) => (
                     <button
                       key={btn.tier}
@@ -545,7 +532,7 @@ export default function ProductDetailsClient({ product, relatedProducts, product
                       }`}
                     >
                       <h5 className="text-[11px] font-bold">{btn.label}</h5>
-                      <span className="text-[9px] text-emerald-400 font-semibold block mt-0.5">{btn.desc} Off</span>
+                      <span className="text-[9px] text-white/55 block mt-0.5">{btn.desc}</span>
                     </button>
                   ))}
                 </div>
