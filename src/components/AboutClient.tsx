@@ -105,7 +105,7 @@ export default function AboutClient() {
       {/* ── Hero Section ── */}
       <section className="relative py-28 bg-gradient-to-b from-black via-gold-950/10 to-black border-b border-white/5">
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <h1 className="font-cinzel text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 md:gap-x-6">
+          <h1 className="font-cinzel text-4xl sm:text-5xl md:text-7xl font-normal text-white mb-6 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 md:gap-x-6">
             <span>Our</span>
             <span className="relative inline-block w-[40px] sm:w-[55px] md:w-[75px] h-[40px] sm:h-[55px] md:h-[75px] align-middle hover:scale-110 transition-transform duration-300">
               <Image
@@ -134,7 +134,7 @@ export default function AboutClient() {
       >
         <div className="mb-12">
           <span className="text-[10px] font-bold text-gold-500 tracking-[0.3em] uppercase block mb-2">Brand Overview</span>
-          <h2 className="font-cinzel text-3xl md:text-4xl font-bold text-white">About Zerothi</h2>
+          <h2 className="font-cinzel text-3xl md:text-4xl font-medium text-white">About Zerothi</h2>
           <div className="w-12 h-0.5 bg-gold-500 mt-4 rounded-full" />
         </div>
 
@@ -205,7 +205,7 @@ export default function AboutClient() {
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold text-gold-500 tracking-[0.3em] uppercase block mb-2">How it is made</span>
-          <h2 className="font-cinzel text-3xl md:text-5xl font-bold text-white mb-4">From Farm to Taste</h2>
+          <h2 className="font-cinzel text-3xl md:text-5xl font-medium text-white mb-4">From Farm to Taste</h2>
           <div className="w-16 h-0.5 bg-gold-500 mx-auto rounded-full" />
         </div>
 
@@ -256,7 +256,7 @@ export default function AboutClient() {
                   <span className="text-[10px] font-bold text-gold-500 tracking-[0.2em] uppercase">
                     {TIMELINE_STEPS[activeStep].subtitle}
                   </span>
-                  <h3 className="font-cinzel text-2xl font-bold text-white mt-2 mb-4">
+                  <h3 className="font-cinzel text-2xl font-medium text-white mt-2 mb-4">
                     {TIMELINE_STEPS[activeStep].title}
                   </h3>
                   <p className="text-white/70 text-xs font-light leading-relaxed tracking-wide">
@@ -278,7 +278,7 @@ export default function AboutClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold text-gold-500 tracking-[0.3em] uppercase block mb-2">What drives us</span>
-            <h2 className="font-cinzel text-3xl md:text-5xl font-bold text-white mb-4">Vision & Mission</h2>
+            <h2 className="font-cinzel text-3xl md:text-5xl font-medium text-white mb-4">Vision & Mission</h2>
             <div className="w-16 h-0.5 bg-gold-500 mx-auto rounded-full" />
           </div>
 
@@ -309,7 +309,7 @@ export default function AboutClient() {
                 </div>
 
                 <span className="text-[9px] font-bold text-gold-500/70 uppercase tracking-[0.3em] block mb-2">Our Vision</span>
-                <h2 className="font-cinzel text-2xl text-white font-bold tracking-wider mb-5">
+                <h2 className="font-cinzel text-2xl text-white font-medium tracking-wider mb-5">
                   Building Honest Food at Scale
                 </h2>
                 <p className="text-white/65 leading-relaxed font-light text-sm tracking-wide">
@@ -380,7 +380,7 @@ export default function AboutClient() {
       <section className="py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
           <span className="text-[10px] font-bold text-gold-500 tracking-[0.3em] uppercase block mb-2">The people behind it</span>
-          <h2 className="font-cinzel text-3xl md:text-5xl font-bold text-white mb-4">Meet The Founders</h2>
+          <h2 className="font-cinzel text-3xl md:text-5xl font-medium text-white mb-4">Meet The Founders</h2>
           <div className="w-16 h-0.5 bg-gold-500 mx-auto rounded-full" />
         </div>
 
@@ -444,7 +444,7 @@ export default function AboutClient() {
 
                   <div>
                     <span className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em] block mb-1">{founder.role}</span>
-                    <h3 className="font-cinzel text-3xl lg:text-4xl font-bold text-white">{founder.name}</h3>
+                    <h3 className="font-cinzel text-3xl lg:text-4xl font-medium text-white">{founder.name}</h3>
                   </div>
 
                   <p className="text-white/65 text-sm font-light leading-relaxed tracking-wide">
@@ -470,7 +470,7 @@ export default function AboutClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold text-gold-500 tracking-[0.3em] uppercase block mb-2">Guided by experience</span>
-            <h2 className="font-cinzel text-3xl md:text-4xl font-bold text-white mb-4">Leadership Advisory</h2>
+            <h2 className="font-cinzel text-3xl md:text-4xl font-medium text-white mb-4">Leadership Advisory</h2>
             <div className="w-16 h-0.5 bg-gold-500 mx-auto rounded-full" />
           </div>
 
@@ -527,7 +527,7 @@ export default function AboutClient() {
                       <span className="text-[10px] font-bold text-gold-500 tracking-[0.25em] uppercase block mb-1">
                         {advisor.domain}
                       </span>
-                      <h3 className="font-cinzel text-3xl sm:text-4xl font-bold text-white tracking-wide">
+                      <h3 className="font-cinzel text-3xl sm:text-4xl font-medium text-white tracking-wide">
                         {advisor.name}
                       </h3>
                       <p className="text-gold-400 text-xs font-bold uppercase tracking-[0.2em] mt-1.5">
